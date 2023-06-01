@@ -33,6 +33,7 @@ samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
 samtools mpileup -f oc_genome.fa lep_sort.bam > raw.bcf
 bcftools view -bvcg my-raw.bcf > my-var.bcf
+samtools flagstat -@ 10 dna.bam > flagstat.txt 
 
 bcftools view my.var.bcf |
 vcfutils.pl varFilter - > my.var-final.vcf
