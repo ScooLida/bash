@@ -22,8 +22,6 @@ SRR5949623 #
 SRR6485281 
 где есть fai
 
-
-
 for var in 
 SRR10082107  SRR17044867
 SRR5949630  SRR6485284 
@@ -38,4 +36,27 @@ bcftools view -bvcg my-raw.bcf > my-var.bcf
 
 bcftools view my.var.bcf |
 vcfutils.pl varFilter - > my.var-final.vcf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
