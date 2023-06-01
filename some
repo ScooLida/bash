@@ -11,23 +11,18 @@ SRR10082107
 for var in  SRR10011655 SRR11020300  SRR17908655  SRR5949623  SRR6485281 SRR10082107  RR17044867  SRR5949630  SRR6485284 SRR11020211  SRR17908654  SRR17908659 SRR17055867  
 do
 cd $var
-samtools sort lep.bam lep_sort
-samtools index lep_sort.bam
+
+
 cd -
 done
 
 SRR10011655#sort
  SRR11020300  SRR17908655  
-SRR5949623 
+SRR5949623 #
 SRR6485281 
-samtools view -bt ref.fa.fai -o aln.bam aln.sam
-
 где есть fai
 
-for var in  SRR10011655 SRR11020300  SRR17908655  SRR5949623  SRR6485281 SRR10082107  SRR17044867  SRR5949630  SRR6485284 SRR11020211  SRR17908654  SRR17908659 SRR17055867  
-do
-scp ./SRR10011655/oc_genome.fa.fai ./SRR17044867
-done
+
 
 for var in 
 SRR10082107  SRR17044867
@@ -37,3 +32,10 @@ SRR17908659 SRR17055867
 
 samtools view -bt ref.fa.fai -o lep.bam lep.sam
 samtools sort lep.bam -o lep_sort.bam
+samtools index lep_sort.bam
+samtools mpileup -f oc_genome.fa lep_sort.bam > raw.bcf
+bcftools view -bvcg my-raw.bcf > my-var.bcf
+
+bcftools view my.var.bcf |
+vcfutils.pl varFilter - > my.var-final.vcf
+
