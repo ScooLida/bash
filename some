@@ -1,5 +1,12 @@
-                                                                                  script5.sh                                                                                            
-for var in  SRR10011655 SRR11020300  SRR17908655  SRR5949623  SRR6485281 SRR10082107  RR17044867  SRR5949630  SRR6485284 SRR11020211  SRR17908654  SRR17908659 SRR17055867  
+                                                                                    
+fasterq-dump --split-files SRR17055867.sra
+export PATH="$HOME/miniconda/bin:$PATH"
+conda install -c bioconda adapterremoval
+AdapterRemoval --file1 SRR17055867_1.fastq --file2 SRR17055867_2.fastq --basena>
+#bowtie
+bowtie2 -p
+
+for var in  SRR10011655 SRR11020300  SRR17908655  SRR5949623  SRR6485281 SRR10082107  SRR17044867  SRR5949630  SRR6485284 SRR11020211  SRR17908654  SRR17908659 SRR17055867  
 do
 cd $var
 bowtie2 -p 6 -q --very-sensitive-local -x oc_index -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
@@ -14,7 +21,7 @@ cd $var
 
 
 cd -
-done
+done SRR17044867
 
 SRR10011655#sort
  SRR11020300  SRR17908655  
@@ -28,7 +35,7 @@ SRR5949630  SRR6485284
 SRR11020211  SRR17908654 
 SRR17908659 SRR17055867  
 
-samtools view -bt ref.fa.fai -o lep.bam lep.sam
+samtools view -bt oc_genome.fa.fai -o lep.bam lep.sam
 samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
 samtools mpileup -f oc_genome.fa lep_sort.bam > raw.bcf
