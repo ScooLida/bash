@@ -25,6 +25,32 @@ bcftools view calls.vcf.gz | vcfutils.pl varFilter > var.flt.vcf
 #statistic
 samtools flagstat -@ 5 lep.bam > flagstat.txt 
 
+mkdir 1k
+scp 1k_* 1k
+cd 1k
+AdapterRemoval --file1 1k_S1_R1_001.fastq --basename output1 --trimns --trimqualities
+AdapterRemoval --file1 1k_S1_R2_001.fastq --basename output2 --trimns --trimqualities
+cd ..
+mkdir 3k
+scp 3k_* 3k
+cd 3k
+AdapterRemoval --file1 3k_S2_R1_001.fastq  --basename output1 --trimns --trimqualities
+AdapterRemoval --file1 3k_S2_R2_001.fastq ---basename output2 --trimns --trimqualities
+cd ..
+mkdir 4k
+scp 4k-1_S3_* 4k
+cd 4k
+AdapterRemoval --file1 4k-1_S3_R1_001.fastq --basename output1 --trimns --trimqualities
+AdapterRemoval --file1 4k-1_S3_R2_001.fastq --basename output2 --trimns --trimqualities
+cd ..
+mkdir 5k
+scp 5k-1_* 5k
+cd 5k
+AdapterRemoval --file1 5k-1_S4_R1_001.fastq --basename output1 --trimns --trimqualities
+AdapterRemoval --file1 5k-1_S4_R1_001.fastq --basename output2 --trimns --trimqualities
+cd ..
+
+
 
 
 
