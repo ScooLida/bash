@@ -3,16 +3,9 @@ fasterq-dump --split-files SRR17055867.sra
 export PATH="$HOME/miniconda/bin:$PATH"
 conda install -c bioconda adapterremoval
 AdapterRemoval --file1 1k_S1_R1_001.fastq  --file2 1k_S1_R2_001.fastq --basename output_paired --trimns --trimqualities
-AdapterRemoval --file1 3k_S2_R1_001.fastq  --file2 3k_S2_R2_001.fastq --basename output_paired --trimns --trimqualities
-AdapterRemoval --file1 4k-1_S3_R1_001.fastq --file2 1 4k-1_S3_R2_001.fastq --basename output_paired --trimns --trimqualities
-AdapterRemoval --file1  5k-1_S4_R1_001.fastq  --file2 5k-1_S4_R2_001.fastq --basename output_paired --trimns --trimqualities
-
-
 
 #bowtie
 bowtie2 -p 6 -q --very-sensitive-local -x oc_index -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
-cd -
-done
 
 
 #samtools
@@ -20,40 +13,13 @@ samtools view -bt oc_genome.fa.fai -o lep.bam lep.sam
 samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
 bcftools mpileup -f oc_genome.fa lep_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
-bcftools view calls.vcf.gz | vcfutils.pl varFilter > var.flt.vcf
+bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
 
-#statistic
-samtools flagstat -@ 5 lep.bam > flagstat.txt 
-
-mkdir 1k
-scp 1k_* 1k
-cd 1k
-AdapterRemoval --file1 1k_S1_R1_001.fastq --basename output1 --trimns --trimqualities
-AdapterRemoval --file1 1k_S1_R2_001.fastq --basename output2 --trimns --trimqualities
-cd ..
-mkdir 3k
-scp 3k_* 3k
-cd 3k
-AdapterRemoval --file1 3k_S2_R1_001.fastq  --basename output1 --trimns --trimqualities
-AdapterRemoval --file1 3k_S2_R2_001.fastq ---basename output2 --trimns --trimqualities
-cd ..
-mkdir 4k
-scp 4k-1_S3_* 4k
-cd 4k
-AdapterRemoval --file1 4k-1_S3_R1_001.fastq --basename output1 --trimns --trimqualities
-AdapterRemoval --file1 4k-1_S3_R2_001.fastq --basename output2 --trimns --trimqualities
-cd ..
-mkdir 5k
-scp 5k-1_* 5k
-cd 5k
-AdapterRemoval --file1 5k-1_S4_R1_001.fastq --basename output1 --trimns --trimqualities
-AdapterRemoval --file1 5k-1_S4_R1_001.fastq --basename output2 --trimns --trimqualities
-cd ..
-
-
-
-
-
+#проверка на наличие 
+if test -f "$var.vcf"; then
+    echo "$var exists."
+else echo "$var not"
+fi  
 
 
 
