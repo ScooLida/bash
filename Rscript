@@ -1,0 +1,6 @@
+# загружаем smartsnp
+install.packages("devtools")
+devtools::install_github("ChristianHuber/smartsnp")
+
+# Load the PLINK (.fam) file to get the number of samples
+numSamples = nrow(read.table("region.fam"))
