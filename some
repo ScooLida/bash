@@ -21,13 +21,10 @@ if test -f "$var.vcf"; then
 else echo "$var not"
 fi  
 
-
-
-
-
-
-
-
+for var in list.txt
+do
+scp $var/$var.vcf RRR
+done
 
 
 
