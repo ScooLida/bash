@@ -27,6 +27,7 @@ scp $var/$var.vcf RRR
 done
 
 
+bgzip -c SRR10011655.vcf > SRR10011655.vcf.gz
 
 
 
