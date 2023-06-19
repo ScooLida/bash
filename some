@@ -29,10 +29,36 @@ done
 
 bgzip -c SRR10011655.vcf > SRR10011655.vcf.gz
 
+export PATH="$HOME/miniconda/bin:$PATH"
+
+vcf_format_conversions.py --vcf SRR10011655.vcf --out SRR10011655 --out-format eigenstrat
 
 
+~/plink --vcf SRR10011655.vcf.gz --recode A-transpose --allow-extra-chr --out SRR10011655
 
+Calls: smart_pca -> do.call -> [ -> [.data.table
+In addition: Warning message:
+In data.table::fread(file = snp_data, header = FALSE) :
+  Stopped early on line 2221. Expected 2 fields but found 4. Consider fill=TRUE and comment.char=. First discarded non-empty line: <<##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">>>
+Execution halted
+sed '2221,2222!d' SRR17908658.vcf
+Imported 11426973 SNP by 4 sample genotype matrix
+Time elapsed: 0h 0m 32s
+Filtering data...
+No samples projected after PCA computation
+Error in smart_pca(snp_data = "SRR10011655.traw", "1.traw", "2.traw",  : 
+  length(sample_group) should be equal to number of samples in dataset: computation aborted
+Execution halted
 
+Checking argument options selected...
+Argument options are correct...
+Loading data...
+Imported 11426973 SNP by 4 sample genotype matrix
+Time elapsed: 0h 0m 32s
+Filtering data...
+No samples projected after PCA computation
+Error in smart_pca(snp_data = "SRR10011655.traw", "1.traw", "2.traw",  : 
+  length(sample_group) should be equal to number of samples in dataset: computation aborted
 
 
 
