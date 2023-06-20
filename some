@@ -60,6 +60,12 @@ No samples projected after PCA computation
 Error in smart_pca(snp_data = "SRR10011655.traw", "1.traw", "2.traw",  : 
   length(sample_group) should be equal to number of samples in dataset: computation aborted
 
+Error in file(filepath, "rb", raw = TRUE) : 
+  invalid 'description' argument
+Calls: smart_pca -> is.binary -> file
+Execution halted
+
+
 
 
 
