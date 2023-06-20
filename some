@@ -1,4 +1,10 @@
-                                                                                    
+#пцр-дупликаты убрать
+#mileup - загонять все vcf
+# 2 образца - 30тл, 2 - 10тл
+#admixure
+#d-st 30тл вклад 
+
+
 fasterq-dump --split-files SRR17055867.sra
 
 #геном Ochotona curzoniae
@@ -8,7 +14,7 @@ rsync --copy-links --recursive --times --verbose rsync://ftp.ncbi.nlm.nih.gov/ge
 export PATH="$HOME/miniconda/bin:$PATH"
 conda install -c bioconda adapterremoval
 AdapterRemoval --file1 1k_S1_R1_001.fastq  --file2 1k_S1_R2_001.fastq --basename output_paired --trimns --trimqualities
-
+#fastp посмотреть 
 #выравнивание на геном пищухи bowtie. получение .sam
 bowtie2 -p 6 -q --very-sensitive-local -x oc_index -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
 
@@ -57,9 +63,11 @@ Error in smart_pca(snp_data = "SRR10011655.traw", "1.traw", "2.traw",  :
 library (smartsnp, lib.loc = "~/_lib")
 My <- c(rep("A",1), rep("B",2))
 hh <- c("/mss_users/ltursunova/cow/R/PPP/1.traw", "/mss_users/ltursunova/cow/R/PPP/3.traw", "/mss_users/ltursunova/cow/R/PPP/2.traw",
-sm.pca <- smart_pca(snp_data =hh,
+sm.pca <- smart_pca(snp_data =hh, 
                     missing_value = NA,
                         sample_group = My)
+# ./PPP
+
 pdf("my_plot.pdf")
 plot(sm.pca$pca.sample_coordinates[, c(3,4)])
 dev.off()
