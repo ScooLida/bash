@@ -1,10 +1,4 @@
-#пцр-дупликаты убрать
-#https://www.cog-genomics.org/plink/1.9/strat
 #mileup - загонять все vcf
-# 2 образца - 30тл, 2 - 10тл
-#admixure
-#d-st 30тл вклад 
-
 
 fasterq-dump --split-files SRR17055867.sra
 
@@ -31,13 +25,10 @@ bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
 #статистика
 samtools flagstat -@ 10 dna.bam > flagstat.txt 
 
-bgzip -c SRR10011655.vcf > SRR10011655.vcf.gz
-
-#должен был получиться формат eigenstrat
-vcf_format_conversions.py --vcf SRR10011655.vcf --out SRR10011655 --out-format eigenstrat
 
 #получаем формат .traw 
 ~/plink --vcf SRR10011655.vcf.gz --recode A-transpose --allow-extra-chr --out SRR10011655
+
 
 
 library (smartsnp, lib.loc = "~/_lib")
@@ -50,33 +41,6 @@ pdf("my_plot.pdf")
 plot(sm.pca$pca.sample_coordinates[, c(3,4)])
 dev.off()
  
-Checking argument options selected...
-Argument options are correct...
-Loading data...
-Imported 11426973 SNP by 4 sample genotype matrix
-Time elapsed: 0h 0m 32s
-Filtering data...
-No samples projected after PCA computation
-Error in smart_pca(snp_data = "SRR10011655.traw", "1.traw", "2.traw",  : 
-  length(sample_group) should be equal to number of samples in dataset: computation aborted
-
-
-library (smartsnp, lib.loc = "~/_lib")
-My <- c(rep("A",1), rep("B",2))
-hh <- c("/mss_users/ltursunova/cow/R/PPP/1.traw", "/mss_users/ltursunova/cow/R/PPP/3.traw", "/mss_users/ltursunova/cow/R/PPP/2.traw",
-sm.pca <- smart_pca(snp_data =hh, 
-                    missing_value = NA,
-                        sample_group = My)
-# ./PPP
-
-pdf("my_plot.pdf")
-plot(sm.pca$pca.sample_coordinates[, c(3,4)])
-dev.off()
-
-Error in file(filepath, "rb", raw = TRUE) : 
-  invalid 'description' argument
-Calls: smart_pca -> is.binary -> file
-Execution halted
 
 
 #проверка на наличие 
@@ -88,6 +52,7 @@ fi
 #показать строку
 sed '2221,2222!d' SRR17908658.vcf
 
-
+#архив
+bgzip -c SRR10011655.vcf > SRR10011655.vcf.gz
 
 
