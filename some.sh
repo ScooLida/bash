@@ -22,7 +22,6 @@ fasterq-dump --split-files SRR17055867.sra
 #геном Ochotona_princeps
 rsync --copy-links --recursive --times --verbose rsync://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Ochotona_princeps/latest_assembly_versions/GCF_014633375.1_OchPri4.0/ ~/cow/oc 
 
-conda install -c bioconda fastp
 
 #удаление адаптеров
 export PATH="$HOME/miniconda/bin:$PATH"
@@ -30,6 +29,9 @@ conda install -c bioconda adapterremoval
 AdapterRemoval --file1 1k_S1_R1_001.fastq  --file2 1k_S1_R2_001.fastq --basename output_paired --trimns --trimqualities
 
 
+
+#индекс пищухи
+bowtie2-build reference_sequence.fasta index_name
 
 #выравнивание на геном пищухи bowtie. получение .sam
 bowtie2 -p 6 -q --very-sensitive-local -x oc_index -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
