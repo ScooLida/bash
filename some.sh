@@ -22,6 +22,15 @@ fasterq-dump --split-files SRR17055867.sra
 #геном Ochotona_princeps
 rsync --copy-links --recursive --times --verbose rsync://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Ochotona_princeps/latest_assembly_versions/GCF_014633375.1_OchPri4.0/ ~/cow/oc 
 
+#удаление пцр-дупликатов(rd)
+java -version
+#скачать файл
+https://github.com/broadinstitute/picard/releases/tag/3.0.0
+
+java -jar picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true \
+      I=input.bam \
+      O=rd.bam \
+      M=mark_dups_w_mate_cig_metrics.txt
 
 #удаление адаптеров
 export PATH="$HOME/miniconda/bin:$PATH"
