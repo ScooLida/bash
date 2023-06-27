@@ -1,4 +1,5 @@
-#mileup - загонять все vcf
+for var in SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908654	SRR17908659	SRR17908658	SRR5949632 
+do 
 
 export PATH="$HOME/miniconda/bin:$PATH"
 
@@ -57,8 +58,7 @@ samtools flagstat -@ 10 dna.bam > flagstat.txt
 #получаем формат .traw 
 ~/plink --vcf SRR10011655.vcf.gz --recode A-transpose --allow-extra-chr --out SRR10011655
 
-for var in SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908654	SRR17908659	SRR17908658	SRR5949632 
-do 
+
 scp oc2* ./$var
 cd $var
 bowtie2 -p 11 -q --very-sensitive-local -x oc2 -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
@@ -81,7 +81,44 @@ samtools index SRR5949630_sort.bam
 bcftools mpileup -f oc2_genome.fa SRR5949630_sort.bam SRR17908659_sort.bam SRR17908655_sort.bam SRR17044867_sort.bam SRR10011655_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
 
 
-bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
+bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > All_filtered.vcf
+
+
+
+cd ./1k
+mv lep_sort.bam.bai 1.bam.bai
+mv lep_sort.bam 1.bam
+cd ..
+scp ./3k/3.ba* ./TESTR
+
+cd ./3k
+mv lep_sort.bam.bai 3.bam.bai
+mv lep_sort.bam 3.bam
+cd ..
+scp ./3k/3.ba* ./TESTR
+
+cd ./4k
+mv lep_sort.bam.bai 4.bam.bai
+mv lep_sort.bam 4.bam
+cd ..
+scp ./4k/4.ba* ./TESTR
+
+cd ./5k
+mv lep_sort.bam.bai 5.bam.bai
+mv lep_sort.bam 5.bam
+cd ..
+scp ./3k/5.ba* ./TESTR
+
+cd ./TESTR
+bcftools mpileup -f oc_genome.fa 1.bam 3.bam 4.bam 5.bam | bcftools call -mv -Oz -o calls.vcf.gz
+bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > Z_filtered.vcf
+
+
+
+
+
+
+
 
 
 
