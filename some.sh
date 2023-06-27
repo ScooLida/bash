@@ -27,11 +27,7 @@ java -version
 #скачать файл
 https://github.com/broadinstitute/picard/releases/tag/3.0.0
 
-java -jar picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true \
-      I=input.bam \
-      O=rd.bam \
-      M=mark_dups_w_mate_cig_metrics.txt
-
+e
 #удаление адаптеров
 export PATH="$HOME/miniconda/bin:$PATH"
 conda install -c bioconda adapterremoval
