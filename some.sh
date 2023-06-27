@@ -22,14 +22,12 @@ fasterq-dump --split-files SRR17055867.sra
 #геном Ochotona_princeps
 rsync --copy-links --recursive --times --verbose rsync://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Ochotona_princeps/latest_assembly_versions/GCF_014633375.1_OchPri4.0/ ~/cow/oc 
 
-ltursunova@sy2:~$ export JAVA_HOME=/mss_users/ltursunova/jdk/jdk-17.0.7/
-ltursunova@sy2:~$ export PATH="$JAVA_HOME/bin:$PATH"
 #удаление пцр-дупликатов(rd)
-java -version
-#скачать файл
-https://github.com/broadinstitute/picard/releases/tag/3.0.0
+export JAVA_HOME=/mss_users/ltursunova/jdk/jdk-17.0.7/
+export PATH="$JAVA_HOME/bin:$PATH"
+java -jar ~/picard/picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true       I=lep_sort.bam       O=rdlep.bam       M=mark_dups_w_mate_cig_metrics.txt
 
-e
+
 #удаление адаптеров
 export PATH="$HOME/miniconda/bin:$PATH"
 conda install -c bioconda adapterremoval
