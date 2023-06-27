@@ -22,6 +22,8 @@ fasterq-dump --split-files SRR17055867.sra
 #геном Ochotona_princeps
 rsync --copy-links --recursive --times --verbose rsync://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Ochotona_princeps/latest_assembly_versions/GCF_014633375.1_OchPri4.0/ ~/cow/oc 
 
+ltursunova@sy2:~$ export JAVA_HOME=/mss_users/ltursunova/jdk/jdk-17.0.7/
+ltursunova@sy2:~$ export PATH="$JAVA_HOME/bin:$PATH"
 #удаление пцр-дупликатов(rd)
 java -version
 #скачать файл
