@@ -56,7 +56,7 @@ samtools flagstat -@ 10 dna.bam > flagstat.txt
 
 
 #получаем формат .traw 
-~/plink --vcf Z_filtered.vcf.gz --recode A-transpose --out SRR10011655
+~/plink --vcf Z_filtered.vcf.gz --recode A-transpose --out Z_filtered
 
 
 scp oc2* ./$var
@@ -98,7 +98,10 @@ scp ./$var/$var.bam ./New
 done
 
 
-
+scp 3k_S* ./3
+scp 4k-1 ./4
+scp 5k-* ./5
+rm -R 2
 
 
 
