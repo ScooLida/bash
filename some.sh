@@ -68,54 +68,34 @@ cd ..
 scp ./$var/$var.bam ./New
 done
 
-samtools sort SRR10011655.bam -o SRR10011655_sort.bam
-samtools index SRR10011655_sort.bam
-samtools sort SRR17044867.bam -o SRR17044867_sort.bam
-samtools index SRR17044867_sort.bam
-samtools sort SRR17908655.bam -o SRR17908655_sort.bam
-samtools index SRR17908655_sort.bam
-samtools sort SRR17908659.bam -o SRR17908659_sort.bam
-samtools index SRR17908659_sort.bam
-samtools sort SRR5949630.bam -o SRR5949630_sort.bam
-samtools index SRR5949630_sort.bam
-bcftools mpileup -f oc2_genome.fa SRR5949630_sort.bam SRR17908659_sort.bam SRR17908655_sort.bam SRR17044867_sort.bam SRR10011655_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
 
 
 bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > All_filtered.vcf
 
+for var in SRR10011655  SRR11020300     SRR17908655     SRR5949623      SRR6485281      SRR17044867     SRR5949630      SRR6485284      SRR11020211     SRR17908654     SRR17908659     SRR17908658     SRR5949632 
+do 
+samtools sort $var.bam -o $var.sort.bam
+samtools index $var.sort.bam
+done
+bcftools mpileup -f oc_genome.fa SRR10011655.sort.bam  SRR11020300.sort.bam     SRR17908655.sort.bam     SRR5949623.sort.bam      SRR6485281.sort.bam      SRR17044867.sort.bam     SRR5949630.sort.bam      SRR6485284.sort.bam      SRR11020211.sort.bam     SRR17908654.sort.bam     SRR17908659.sort.bam     SRR17908658.sort.bam     SRR5949632.sort.bam  | bcftools call -mv -Oz -o calls.vcf.gz
 
 
-cd ./1k
-mv lep_sort.bam.bai 1.bam.bai
-mv lep_sort.bam 1.bam
-cd ..
-scp ./3k/3.ba* ./TESTR
 
-cd ./3k
-mv lep_sort.bam.bai 3.bam.bai
-mv lep_sort.bam 3.bam
-cd ..
-scp ./3k/3.ba* ./TESTR
-
-cd ./4k
-mv lep_sort.bam.bai 4.bam.bai
-mv lep_sort.bam 4.bam
-cd ..
-scp ./4k/4.ba* ./TESTR
-
-cd ./5k
-mv lep_sort.bam.bai 5.bam.bai
-mv lep_sort.bam 5.bam
-cd ..
-scp ./3k/5.ba* ./TESTR
 
 cd ./TESTR
 bcftools mpileup -f oc_genome.fa 1.bam 3.bam 4.bam 5.bam | bcftools call -mv -Oz -o calls.vcf.gz
 bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > Z_filtered.vcf
 
 
-
-
+do 
+scp oc2* ./$var
+cd $var
+bowtie2 -p 11 -q --very-sensitive-local -x oc2 -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
+samtools view -bt oc_genome.fa.fai -o $var.bam lep.sam
+samtools flagstat -@ 10 $var.bam > flagstat.txt
+cd ..
+scp ./$var/$var.bam ./New
+done
 
 
 
