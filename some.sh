@@ -13,7 +13,7 @@ fi
 sed '2221,2222!d' SRR17908658.vcf
 
 #архив
-bgzip -c SRR10011655.vcf > SRR10011655.vcf.gz
+bgzip -c Z_filtered.vcf > Z_filtered.vcf.gz
 gzip -dk SRR10011655.vcf.gz
 tar xvzf archive.tar.gz
 
