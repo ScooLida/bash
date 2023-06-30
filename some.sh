@@ -1,5 +1,4 @@
 for var in SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908654	SRR17908659	SRR17908658	SRR5949632 
-do 
 
 export PATH="$HOME/miniconda/bin:$PATH"
 
@@ -34,8 +33,6 @@ export PATH="$HOME/miniconda/bin:$PATH"
 conda install -c bioconda adapterremoval
 AdapterRemoval --file1 1k_S1_R1_001.fastq  --file2 1k_S1_R2_001.fastq --basename output_paired --trimns --trimqualities
 
-
-
 #индекс пищухи
 bowtie2-build reference_sequence.fasta index_name
 
@@ -58,50 +55,24 @@ samtools flagstat -@ 10 dna.bam > flagstat.txt
 #получаем формат .traw 
 ~/plink --vcf Z_filtered.vcf.gz --recode A-transpose --out Z_filtered
 
-
-scp oc2* ./$var
-cd $var
-bowtie2 -p 11 -q --very-sensitive-local -x oc2 -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
-samtools view -bt oc_genome.fa.fai -o $var.bam lep.sam
-samtools flagstat -@ 10 $var.bam > flagstat.txt
-cd ..
-scp ./$var/$var.bam ./New
-done
+#################################################################################################
 
 
 
-bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > All_filtered.vcf
-
-for var in SRR10011655  SRR11020300     SRR17908655     SRR5949623      SRR6485281      SRR17044867     SRR5949630      SRR6485284      SRR11020211     SRR17908654     SRR17908659     SRR17908658     SRR5949632 
-do 
-samtools sort $var.bam -o $var.sort.bam
-samtools index $var.sort.bam
-done
 bcftools mpileup -f oc_genome.fa SRR10011655.sort.bam  SRR11020300.sort.bam     SRR17908655.sort.bam     SRR5949623.sort.bam      SRR6485281.sort.bam      SRR17044867.sort.bam     SRR5949630.sort.bam      SRR6485284.sort.bam      SRR11020211.sort.bam     SRR17908654.sort.bam     SRR17908659.sort.bam     SRR17908658.sort.bam     SRR5949632.sort.bam  | bcftools call -mv -Oz -o calls.vcf.gz
 
-
-
+samtools view -bt oc_genome.fa.fai -o z3.bam z3.sam
+samtools sort z3.bam -o z3_sort.bam
+export JAVA_HOME=/mss_users/ltursunova/jdk/jdk-17.0.7/
+export PATH="$JAVA_HOME/bin:$PATH"
+java -jar ~/picard/picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true       I=z3_sort.bam       O=rd_z3.bam       M=mark_dups_w_mate_cig_metrics.txt
+samtools index rd_z3.bam
+samtools flagstat z3_sort.bam > flagstat.txt 
+samtools flagstat rd_z3.bam > flagstat.txt 
 
 cd ./TESTR
 bcftools mpileup -f oc_genome.fa 1.bam 3.bam 4.bam 5.bam | bcftools call -mv -Oz -o calls.vcf.gz
 bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > Z_filtered.vcf
-
-
-do 
-scp oc2* ./$var
-cd $var
-bowtie2 -p 11 -q --very-sensitive-local -x oc2 -U output_paired.pair1.truncated output_paired.pair2.truncated  -S lep.sam
-samtools view -bt oc_genome.fa.fai -o $var.bam lep.sam
-samtools flagstat -@ 10 $var.bam > flagstat.txt
-cd ..
-scp ./$var/$var.bam ./New
-done
-
-
-scp 3k_S* ./3
-scp 4k-1 ./4
-scp 5k-* ./5
-rm -R 2
 
 
 
