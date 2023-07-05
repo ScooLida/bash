@@ -46,15 +46,16 @@ samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
 bcftools mpileup -f oc2_genome.fa lep_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
 vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
+ tabix -p vcf zz1.vcf.gz
 #фильтрация
-bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
+bcftools filter out.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
 
 #статистика
 samtools flagstat -@ 10 dna.bam > flagstat.txt 
 
 
 #получаем формат .traw 
-~/plink --vcf Z_filtered.vcf.gz --recode A-transpose --out Z_filtered
+~/plink --vcf out.vcf.gz --recode A-transpose --out Z_filtered
 
 #################################################################################################
 
