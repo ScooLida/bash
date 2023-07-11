@@ -45,6 +45,9 @@ samtools view -bt ~/cow/oc2_genome.fa.fai  -o lep.bam lep.sam
 samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
 bcftools mpileup -f oc2_genome.fa lep_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
+
+bcftools view -m2 -M2 -v snps input.vcf.gz
+
 vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
  tabix -p vcf zz1.vcf.gz
 #фильтрация
