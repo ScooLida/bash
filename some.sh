@@ -41,7 +41,8 @@ bowtie2 -p 6 -q --very-sensitive-local -x oc_index -U output_paired.pair1.trunca
 
 # форматирование samtools
 samtools faidx ref.fa
-samtools view -bt ~/cow/oc2_genome.fa.fai  -o lep.bam lep.sam
+samtools view -bt ~/cow/oc2_genome.fa.fai -@ 12 -o z1_1207.bam z1.sam
+samtools flagstat -@ 10 z1_1207.bam > z1_1207.txt 
 samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
 bcftools mpileup -f oc2_genome.fa lep_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
@@ -54,8 +55,8 @@ vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
 bcftools filter out.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
 
 #корявый bam в норм sam
-samtools view -@ 12 -h rd_z1_sort.bam > file1.sam 
-samtools view -@ 12 -bt ~/cow/oc2_genome.fa.fai  -o file1.bam file1.sam
+samtools view -@ 12 -h rd_z1_sort.bam > z11207_2.bam 
+samtools view -@ 12 -bt ~/cow/oc2_genome.fa.fai  -o .bam file1.sam
 #статистика
 samtools flagstat -@ 10 dna.bam > flagstat.txt 
 
@@ -65,7 +66,7 @@ samtools flagstat -@ 10 dna.bam > flagstat.txt
 
 #################################################################################################
 
-
+samtools view -@ 12 -h rd_z1_sort.bam > z11207_2.bam
 
 bcftools mpileup -f oc2_genome.fa SRR10011655.sort.bam  SRR11020300.sort.bam     SRR17908655.sort.bam     SRR5949623.sort.bam      SRR6485281.sort.bam      SRR17044867.sort.bam     SRR5949630.sort.bam      SRR6485284.sort.bam      SRR11020211.sort.bam     SRR17908654.sort.bam     SRR17908659.sort.bam     SRR17908658.sort.bam     SRR5949632.sort.bam  | bcftools call -mv -Oz -o calls2.vcf.gz
 
