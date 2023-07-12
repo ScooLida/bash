@@ -53,6 +53,9 @@ vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
 #фильтрация
 bcftools filter out.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
 
+#корявый bam в норм sam
+samtools view -@ 12 -h rd_z1_sort.bam > file1.sam 
+samtools view -@ 12 -bt ~/cow/oc2_genome.fa.fai  -o file1.bam file1.sam
 #статистика
 samtools flagstat -@ 10 dna.bam > flagstat.txt 
 
@@ -79,6 +82,9 @@ cd ./TESTR
 bcftools mpileup -f oc_genome.fa 1.bam 3.bam 4.bam 5.bam | bcftools call -mv -Oz -o calls.vcf.gz
 bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > Z_filtered.vcf
 
+java -jar picard.jar ValidateSamFile \
+      I=rd_z1_sort.bam \
+      MODE=SUMMARY
 
 
 
