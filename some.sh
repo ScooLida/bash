@@ -66,6 +66,8 @@ samtools flagstat -@ 10 dna.bam > flagstat.txt
 
 #################################################################################################
 
+samtools quickcheck -qvvv z11207_2.bam 
+
 samtools view -@ 12 -h rd_z1_sort.bam > z11207_2.bam
 
 bcftools mpileup -f oc2_genome.fa SRR10011655.sort.bam  SRR11020300.sort.bam     SRR17908655.sort.bam     SRR5949623.sort.bam      SRR6485281.sort.bam      SRR17044867.sort.bam     SRR5949630.sort.bam      SRR6485284.sort.bam      SRR11020211.sort.bam     SRR17908654.sort.bam     SRR17908659.sort.bam     SRR17908658.sort.bam     SRR5949632.sort.bam  | bcftools call -mv -Oz -o calls2.vcf.gz
@@ -88,5 +90,12 @@ java -jar picard.jar ValidateSamFile \
       MODE=SUMMARY
 
 
+samtools sort -n -o Sorted_names.bam -O BAM z1.bam
+
+samtools fixmate -m Sorted_names.bam Fixmate.bam
+
+samtools sort -o Sorted.bam Fixmate.bam
+
+samtools markdup -r -s Sorted.bam Final_File.bam
 
 
