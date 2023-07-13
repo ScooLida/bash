@@ -48,9 +48,9 @@ samtools index lep_sort.bam
 bcftools mpileup -f oc2_genome.fa lep_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
 
 bcftools view -m2 -M2 -v snps input.vcf.gz
-
-vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
  tabix -p vcf zz1.vcf.gz
+vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
+
 #фильтрация
 bcftools filter out.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
 
@@ -67,35 +67,23 @@ samtools flagstat -@ 10 dna.bam > flagstat.txt
 #################################################################################################
 
 samtools quickcheck -qvvv z11207_2.bam 
+z11207_2.bam cannot be checked for EOF block because its filetype does not contain one.
+ z1_sort.bam
+ z1_sort.bam has good EOF block.
+rd_z1_sort.bam was missing EOF block when one should be present.
 
-samtools view -@ 12 -h rd_z1_sort.bam > z11207_2.bam
+~/plink --vcf out.vcf  --allow-extra-chr --make-bed --out  1307
 
-bcftools mpileup -f oc2_genome.fa SRR10011655.sort.bam  SRR11020300.sort.bam     SRR17908655.sort.bam     SRR5949623.sort.bam      SRR6485281.sort.bam      SRR17044867.sort.bam     SRR5949630.sort.bam      SRR6485284.sort.bam      SRR11020211.sort.bam     SRR17908654.sort.bam     SRR17908659.sort.bam     SRR17908658.sort.bam     SRR5949632.sort.bam  | bcftools call -mv -Oz -o calls2.vcf.gz
 
 samtools view -bt ~/cow/oc2_genome.fa.fai  -o z3.bam z3.sam
 samtools sort z3.bam -o z3_sort.bam
 export JAVA_HOME=/mss_users/ltursunova/jdk/jdk-17.0.7/
 export PATH="$JAVA_HOME/bin:$PATH"
-java -jar ~/picard/picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true       I=z3_sort.bam       O=rd_z3_sort.bam       M=mark_dups_w_mate_cig_metrics.txt
-samtools index rd_z3_sort.bam 
-samtools flagstat rd_z3_sort.bam  > rd_z3_sort.txt 
-samtools flagstat rd_z3.bam > flagstat.txt 
+java -jar ~/picard/picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true       I=z5_sort.bam      O=rd_z5_sort.bam       M=mark_dups_w_mate_cig_metrics.txt
+samtools flagstat rd_z5_sort.bam > rd_z5_sort.txt 
 
-cd ./TESTR
-bcftools mpileup -f oc_genome.fa 1.bam 3.bam 4.bam 5.bam | bcftools call -mv -Oz -o calls.vcf.gz
 bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > Z_filtered.vcf
+ 
+ bcftools view -m2 -M2 -v snps out.vcf.gz
 
-java -jar picard.jar ValidateSamFile \
-      I=rd_z1_sort.bam \
-      MODE=SUMMARY
-
-
-samtools sort -n -o Sorted_names.bam -O BAM z1.bam
-
-samtools fixmate -m Sorted_names.bam Fixmate.bam
-
-samtools sort -o Sorted.bam Fixmate.bam
-
-samtools markdup -r -s Sorted.bam Final_File.bam
-
-
+plink2 --bfile myfile --pca 10 --out qcvcf
