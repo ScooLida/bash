@@ -15,3 +15,4 @@ ggplot(data = eigenVectors) +
       y = paste0("Principal component 2 (",eigen_percent[2,1]," %)"),
       colour = "Goat breeds", shape = "Goat breeds") +
   theme_minimal()
+https://uw.pressbooks.pub/appliedmultivariatestatistics/chapter/pca/
