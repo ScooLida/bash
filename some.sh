@@ -4,6 +4,9 @@ export PATH="$HOME/miniconda/bin:$PATH"
 
 screen -wipe #очистка замерших сессий
 
+#копирование
+scp /home/scoollida/picard.jar ltursunova@sy2.computing.kiae.ru:~/picard
+scp ltursunova@sy2.computing.kiae.ru:~/don/TESTR/pca2.eigenval /home/scoollida/
 #проверка на наличие 
 if test -f "$var.vcf"; then
     echo "$var exists."
