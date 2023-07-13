@@ -87,7 +87,12 @@ bcftools view  -M2 -v snps input.vcf.gz
 ~/plink --bfile 2all --pca 10 --allow-extra-chr --bad-freqs  --out pca2
 
 ############################################################################################################
-SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908654	SRR17908659	SRR17908658	SRR5949632
+for var in SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908654	SRR17908659	SRR17908658	SRR5949632
+do 
+tabix -p vcf $var.vcf.gz
+done
+vcf-merge SRR10011655.vcf.gz SRR11020300.vcf.gz SRR17908655.vcf.gz SRR5949623.vcf.gz SRR6485281.vcf.gz SRR17044867.vcf.gz SRR5949630.vcf.gz SRR6485284.vcf.gz SRR11020211.vcf.gz SRR17908654.vcf.gz SRR17908659.vcf.gz SRR17908658.vcf.gz SRR5949632.vcf.gz | bgzip -c > lepus.vcf.gz
+                       
 
 
 
