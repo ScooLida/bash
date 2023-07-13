@@ -52,43 +52,42 @@ samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
 bcftools mpileup -f oc2_genome.fa lep_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
 
-bcftools view -m2 -M2 -v snps input.vcf.gz
- tabix -p vcf zz1.vcf.gz
-vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
-
 #фильтрация
 bcftools filter out.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
 
-#корявый bam в норм sam
-samtools view -@ 12 -h rd_z1_sort.bam > z11207_2.bam 
-samtools view -@ 12 -bt ~/cow/oc2_genome.fa.fai  -o .bam file1.sam
 #статистика
 samtools flagstat -@ 10 dna.bam > flagstat.txt 
 
-
-#получаем формат .traw 
-~/plink --vcf out.vcf.gz --recode A-transpose --out Z_filtered
-
-#################################################################################################
-
-samtools quickcheck -qvvv z11207_2.bam 
-z11207_2.bam cannot be checked for EOF block because its filetype does not contain one.
- z1_sort.bam
- z1_sort.bam has good EOF block.
-rd_z1_sort.bam was missing EOF block when one should be present.
-
-~/plink --vcf out.vcf  --allow-extra-chr --make-bed --out  1307
-
-
-samtools view -bt ~/cow/oc2_genome.fa.fai  -o z3.bam z3.sam
-samtools sort z3.bam -o z3_sort.bam
+#удаление пцр-дуликатов
 export JAVA_HOME=/mss_users/ltursunova/jdk/jdk-17.0.7/
 export PATH="$JAVA_HOME/bin:$PATH"
 java -jar ~/picard/picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true       I=z5_sort.bam      O=rd_z5_sort.bam       M=mark_dups_w_mate_cig_metrics.txt
-samtools flagstat rd_z5_sort.bam > rd_z5_sort.txt 
+samtools flagstat rd_z5_sort.bam > rd_z5_sort.txt
 
-bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > Z_filtered.vcf
- 
-bcftools view -M2 -v snps out.vcf.gz #убирает больше 2х аллелей, тк bim не записывался
-plink --vcf 2all --allow-extra-chr --make-bed --out  2all
-~/plink --bfile 2all --pca 2 --allow-extra-chr --bad-freqs  --out pca2
+
+samtools quickcheck -qvvv z11207_2.bam 
+#z1_sort.bam has good EOF block.
+#rd_z1_sort.bam was missing EOF block when one should be present.
+#z11207_2.bam cannot be checked for EOF block because its filetype does not contain one.
+# bam  > bam
+# bam > sam > bam
+
+
+#соединяет vcf файлы
+tabix -p vcf zz1.vcf.gz
+vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
+
+#чистит от мультиаллельных локусов, оставляет 1-2
+bcftools view  -M2 -v snps input.vcf.gz
+
+#получаем нужные bim fam bed
+~/plink --vcf out.vcf  --allow-extra-chr --make-bed --out  1307
+
+#выполняем pca
+~/plink --bfile 2all --pca 10 --allow-extra-chr --bad-freqs  --out pca2
+
+############################################################################################################
+SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908654	SRR17908659	SRR17908658	SRR5949632
+
+
+
