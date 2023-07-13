@@ -2,6 +2,8 @@ for var in SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867
 
 export PATH="$HOME/miniconda/bin:$PATH"
 
+screen -wipe #очистка замерших сессий
+
 #проверка на наличие 
 if test -f "$var.vcf"; then
     echo "$var exists."
@@ -84,6 +86,6 @@ samtools flagstat rd_z5_sort.bam > rd_z5_sort.txt
 
 bcftools filter calls.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > Z_filtered.vcf
  
- bcftools view -m2 -M2 -v snps out.vcf.gz
-
-plink2 --bfile myfile --pca 10 --out qcvcf
+bcftools view -M2 -v snps out.vcf.gz #убирает больше 2х аллелей, тк bim не записывался
+plink --vcf 2all --allow-extra-chr --make-bed --out  2all
+~/plink --bfile 2all --pca 2 --allow-extra-chr --bad-freqs  --out pca2
