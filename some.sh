@@ -50,7 +50,7 @@ samtools view -bt ~/cow/oc2_genome.fa.fai -@ 12 -o z1_1207.bam z1.sam
 samtools flagstat -@ 10 z1_1207.bam > z1_1207.txt 
 samtools sort lep.bam -o lep_sort.bam
 samtools index lep_sort.bam
-bcftools mpileup -f oc2_genome.fa lep_sort.bam | bcftools call -mv -Oz -o calls.vcf.gz
+bcftools mpileup -f ~/cow/oc2_genome.fa rd_z3_sort.bam | bcftools call -mv -Oz -o rd_z3.vcf.gz
 
 #фильтрация
 bcftools filter out.vcf.gz -s LowQual -e 'QUAL<20 && DP<10' > filtered.vcf
@@ -75,7 +75,7 @@ samtools quickcheck -qvvv z11207_2.bam
 
 #соединяет vcf файлы
 tabix -p vcf zz1.vcf.gz
-vcf-merge A.vcf.gz B.vcf.gz C.vcf.gz | bgzip -c > out.vcf.gz
+vcf-merge zz1.vcf.gz zz4.vcf.gz zz5.vcf.gz | bgzip -c > Allzz.vcf.gz
 
 #чистит от мультиаллельных локусов, оставляет 1-2
 bcftools view  -M2 -v snps input.vcf.gz
