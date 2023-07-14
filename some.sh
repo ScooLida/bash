@@ -88,7 +88,7 @@ bcftools view  -M2 -v snps input.vcf.gz
 ~/plink --vcf out.vcf  --allow-extra-chr --make-bed --out  1307
 
 #выполняем pca
-~/plink --bfile 2all --pca 4 --allow-extra-chr --bad-freqs  --out pca3
+~/plink --bfile 1407 --pca 4 --allow-extra-chr --bad-freqs  --out pcagen
 
 ############################################################################################################
 for var in SRR10011655	SRR11020300	SRR17908655	SRR5949623	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908654	SRR17908659	SRR17908658	SRR5949632
