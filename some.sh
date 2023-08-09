@@ -8,10 +8,19 @@ screen -wipe #очистка замерших сессий
 scp /home/scoollida/picard.jar ltursunova@sy2.computing.kiae.ru:~/picard
 scp ltursunova@sy2.computing.kiae.ru:~/don/TESTR/pca2.eigenval /home/scoollida/
 #проверка на наличие 
-if test -f "$var.vcf"; then
-    echo "$var exists."
-else echo "$var not"
-fi  
+do
+    cd  $var
+    if ls *.fastq >/dev/null 2>&1; then
+        echo "$var exists."
+    else
+        echo "$var does not exist."
+    fi
+    cd ..
+done
+#Здесь использована команда ls *.fastq >/dev/null 2>&1, 
+#которая проверяет наличие файлов с расширением .fastq в текущей директории. 
+#Если файлы существуют, вывод команды перенаправляется в /dev/null, 
+#чтобы не показывать список файлов. Если файлов нет, вывод перенаправляется в /dev/null и вместо этого выводится сообщение "does not exist."
 
 #показать строку
 sed '2221,2222!d' SRR17908658.vcf
