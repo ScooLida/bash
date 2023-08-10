@@ -113,5 +113,6 @@ done
 vcf-merge SRR10011655.vcf.gz SRR11020300.vcf.gz SRR17908655.vcf.gz SRR5949623.vcf.gz SRR6485281.vcf.gz SRR17044867.vcf.gz SRR5949630.vcf.gz SRR6485284.vcf.gz SRR11020211.vcf.gz SRR17908654.vcf.gz SRR17908659.vcf.gz SRR17908658.vcf.gz SRR5949632.vcf.gz | bgzip -c > lepus.vcf.gz
                        
 
-
+ WARNING: The script paleomix is installed in '/mss_users/ltursunova/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 
