@@ -117,6 +117,16 @@ vcf-merge SRR10011655.vcf.gz SRR11020300.vcf.gz SRR17908655.vcf.gz SRR5949623.vc
  WARNING: The script paleomix is installed in '/mss_users/ltursunova/.local/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 
+MyFilename:
+    MySample:
+      SRR10011655:
+        Path:  /mss_users/ltursunova/cow/new2/SRR10011655*.fastq
+    MySample2:
+       SRR12518920:
+        Path:  /mss_users/ltursunova/cow/new2/SRR12518920*.fastq
+    MySample3:
+       SRR10012547:
+        Path:  /mss_users/ltursunova/cow/new2/SRR10012547*.fastq
 
 
 
