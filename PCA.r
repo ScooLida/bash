@@ -1,3 +1,5 @@
+#PCA (principal component analysis) after plink
+
 library(tidyverse)
 
 # read in result files
