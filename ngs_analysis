@@ -1,3 +1,6 @@
+export PATH="$HOME/miniconda/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
 #скачивание файлов с ncbi
 fasterq-dump --split-files SRR17055867.sra
 
