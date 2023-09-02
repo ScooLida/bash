@@ -74,18 +74,12 @@ export PATH="$JAVA_HOME/bin:$PATH"
 java -jar ~/picard/picard.jar MarkDuplicatesWithMateCigar REMOVE_DUPLICATES=true       I=z5_sort.bam      O=rd_z5_sort.bam       M=mark_dups_w_mate_cig_metrics.txt
 samtools flagstat rd_z5_sort.bam > rd_z5_sort.txt
 
-[E::bgzf_read_block] Failed to read BGZF block data at offset 2240401020 expected 13782 bytes; hread returned 0
-[E::bgzf_read] Read block operation failed with error 4 after 30 of 39 bytes
 
 samtools quickcheck -qvvv z11207_2.bam 
 #rd_z1_sort.bam was missing EOF block when one should be present.
 #rd_z1_sort.bam has 9351 targets in header.
 #z11207_2.bam cannot be checked for EOF block because its filetype does not contain one.
 
-#z1_sort.bam has good EOF block.
-
-# bam > sam > bam
-# bam  > bam
 
 #соединяет vcf файлы
 tabix -p vcf zz1.vcf.gz
@@ -118,28 +112,19 @@ vcf-merge SRR10011655.vcf.gz SRR11020300.vcf.gz SRR17908655.vcf.gz SRR5949623.vc
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 
 MyFilename:
-    MySample:
-      SRR10011655:
-        Path:  /mss_users/ltursunova/cow/new2/SRR10011655*.fastq
-    MySample2:
-       SRR12518920:
-        Path:  /mss_users/ltursunova/cow/new2/SRR12518920*.fastq
-    MySample3:
-       SRR10012547:
-        Path:  /mss_users/ltursunova/cow/new2/SRR10012547*.fastq
+    SRR17908653:
+      SRR17908653:
+        Path:  /mss_users/ltursunova/cow/new2/SRR17908653*.fastq
+    SRR6485240:
+       SRR6485240:
+        Path:  /mss_users/ltursunova/cow/new2/SRR6485240*.fastq
+   
 
+~/bam_pipeline/MyFilename/my_genome/
 
-
-    SRR10011655: /mss_users/ltursunova/cow/new2/SRR10011655*.fastq
-    SRR12518920: /mss_users/ltursunova/cow/new2/SRR12518920*.fastq
-    SRR10012547: /mss_users/ltursunova/cow/new2/SRR10012547*.fastq
-    SRR10082097: /mss_users/ltursunova/cow/new2/SRR10082097*.fastq
-    SRR10082089: /mss_users/ltursunova/cow/new2/SRR10082089*.fastq
-    SRR17908653: /mss_users/ltursunova/cow/new2/SRR17908653*.fastq
-    SRR5949621: /mss_users/ltursunova/cow/new2/SRR5949621*.fastq
-    SRR5949624: /mss_users/ltursunova/cow/new2/SRR5949624*.fastq
-    SRR5949634: /mss_users/ltursunova/cow/new2/SRR5949634*.fastq
-    SRR6485240: /mss_users/ltursunova/cow/new2/SRR6485240*.fastq
-    SRR6485265: /mss_users/ltursunova/cow/new2/SRR6485265*.fastq
-
+samtools sort $var.rmdup.normal.bam  -o $var.sort.bam
+samtools index $var.sort.bam
+bcftools mpileup -f ~/cow/oc2_genome.fa $var.sort.bam | bcftools call -mv -Oz -o $var.vcf.gz
+cd ..
+cp ./$var/$var.vcf.gz ./vcf
 
