@@ -95,52 +95,51 @@ Prefixes:
     Path:  /mss_users/ltursunova/cow/oc2_genome.fasta
 
 
-MyFilename:
-	SRR5949621:
-	   SRR5949621:
-		Path:	/mss_users/ltursunova/cow/new2/SRR5949621*fastq
-	SRR5949624:
-	   SRR5949624:
-		Path:	/mss_users/ltursunova/cow/new2/SRR5949624*fastq
-	SRR5949634:
-	   SRR5949634:
-		Path:	/mss_users/ltursunova/cow/new2/SRR5949634*fastq
-	SRR6485265:
-	   SRR6485265:
-		Path:	/mss_users/ltursunova/cow/new2/SRR6485265*fastq
-	SRR11020300:
-	   SRR11020300:
-		Path:	/mss_users/ltursunova/cow/new2/SRR11020300*fastq
-	SRR17908655:
-	   SRR17908655:
-		Path:	/mss_users/ltursunova/cow/new2/SRR17908655*fastq
-	SRR5949623:
-	   SRR5949623:
-		Path:	/mss_users/ltursunova/cow/new2/SRR5949623*fastq
-	SRR6485281:
-	   SRR6485281:
-		Path:	/mss_users/ltursunova/cow/new2/SRR6485281*fastq
-	SRR17044867:
-	   SRR17044867:
-		Path:	/mss_users/ltursunova/cow/new2/SRR17044867*fastq
-	SRR5949630:
-	   SRR5949630:
-		Path:	/mss_users/ltursunova/cow/new2/SRR5949630*fastq
-	SRR6485284:
-	   SRR6485284:
-		Path:	/mss_users/ltursunova/cow/new2/SRR6485284*fastq
-	SRR11020211:
-	   SRR11020211:
-		Path:	/mss_users/ltursunova/cow/new2/SRR11020211*fastq
-	SRR17908654:
-	   SRR17908654:
-		Path:	/mss_users/ltursunova/cow/new2/SRR17908654*fastq
-	SRR17908659:
-	   SRR17908659:
-		Path:	/mss_users/ltursunova/cow/new2/SRR17908659*fastq
-	SRR17908658:
-	   SRR17908658:
-		Path:	/mss_users/ltursunova/cow/new2/SRR17908658*fastq
-	SRR5949632:
-	   SRR5949632:
-		Path:	/mss_users/ltursunova/cow/new2/SRR5949632*fastq
+  SRR5949621:
+   SRR5949621:
+    Path:  /mss_users/ltursunova/cow/new2/SRR5949621*fastq
+  SRR5949624:
+   SRR5949624:
+    Path:  /mss_users/ltursunova/cow/new2/SRR5949624*fastq
+  SRR5949634:
+   SRR5949634:
+    Path:  /mss_users/ltursunova/cow/new2/SRR5949634*fastq
+  SRR6485265:
+   SRR6485265:
+    Path:  /mss_users/ltursunova/cow/new2/SRR6485265*fastq
+  SRR11020300:
+   SRR11020300:
+    Path:  /mss_users/ltursunova/cow/new2/SRR11020300*fastq
+  SRR17908655:
+   SRR17908655:
+    Path:  /mss_users/ltursunova/cow/new2/SRR17908655*fastq
+  SRR5949623:
+   SRR5949623:
+    Path:  /mss_users/ltursunova/cow/new2/SRR5949623*fastq
+  SRR6485281:
+   SRR6485281:
+    Path:  /mss_users/ltursunova/cow/new2/SRR6485281*fastq
+  SRR17044867:
+   SRR17044867:
+    Path:  /mss_users/ltursunova/cow/new2/SRR17044867*fastq
+  SRR5949630:
+   SRR5949630:
+    Path:  /mss_users/ltursunova/cow/new2/SRR5949630*fastq
+  SRR6485284:
+   SRR6485284:
+    Path:  /mss_users/ltursunova/cow/new2/SRR6485284*fastq
+  SRR11020211:
+   SRR11020211:
+    Path:  /mss_users/ltursunova/cow/new2/SRR11020211*fastq
+  SRR17908654:
+   SRR17908654:
+    Path:  /mss_users/ltursunova/cow/new2/SRR17908654*fastq
+  SRR17908659:
+   SRR17908659:
+    Path:  /mss_users/ltursunova/cow/new2/SRR17908659*fastq
+  SRR17908658:
+   SRR17908658:
+    Path:  /mss_users/ltursunova/cow/new2/SRR17908658*fastq
+  SRR5949632:
+   SRR5949632:
+    Path:  /mss_users/ltursunova/cow/new2/SRR5949632*fastq
