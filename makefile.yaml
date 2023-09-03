@@ -1,3 +1,8 @@
+# -*- mode: Yaml; -*-
+# Default options.
+# Can also be specific for a set of samples, libraries, and lanes,
+# by including the "Options" hierarchy at the same level as those
+# samples, libraries, or lanes below.
 Options:
   # Sequencing platform, see SAM/BAM reference for valid values
   Platform: Illumina
@@ -49,7 +54,7 @@ Options:
 
   # Set to 'yes' exclude a type of trimmed reads from alignment / analysis;
   # possible read-types reflect the output of AdapterRemoval
-   ExcludeReads:
+  ExcludeReads:
     # Exclude single-end reads (yes / no)?
     Single: no
     # Exclude non-collapsed paired-end reads (yes / no)?
@@ -81,7 +86,6 @@ Options:
     # for each BAM and for each 'RegionsOfInterest' specified in 'Prefixes' (yes / no).
     Depths: yes
     # Generate summary table for each target (yes / no)
-   # Generate summary table for each target (yes / no)
     Summary: yes
 
 # Map of prefixes by name, each having a Path, which specifies the location of the
@@ -89,6 +93,8 @@ Options:
 Prefixes:
   my_genome:
     Path:  /mss_users/ltursunova/cow/oc2_genome.fasta
+
+
 MyFilename:
 	SRR5949621:
 	   SRR5949621:
