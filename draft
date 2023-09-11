@@ -18,3 +18,17 @@ bcftools mpileup -f ~/cow/oc2_genome.fasta $var.sort.bam | bcftools call -mv -Oz
 cp $var.vcf.gz ~/bam_pipeline/MyFilename/my_genome/vcf/
 cd ..
 done
+
+--------------------------------
+#соединяет vcf файлы
+tabix -p vcf zz1.vcf.gz
+vcf-merge zz1.vcf.gz zz4.vcf.gz zz5.vcf.gz | bgzip -c > Allzz.vcf.gz
+
+#чистит от мультиаллельных локусов, оставляет 1-2
+bcftools view  -M2 -v  snps  some.vcf.gz  -o some.bi.vcf
+
+#получаем нужные bim fam bed
+~/plink --vcf some.vcf.gz  out.vcf  --allow-extra-chr --make-bed --out  some
+
+#выполняем pca
+~/plink --bfile some --pca 4 --allow-extra-chr --bad-freqs  --out some_gen
