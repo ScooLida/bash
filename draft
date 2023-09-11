@@ -7,3 +7,14 @@ bcftools mpileup -f ~/cow/oc2_genome.fasta $var.rmdup.normal.bam | bcftools call
 cd ..
 cp ./$var/$var.vcf.gz ./vcf
 done
+
+
+for var in SRR11020300	SRR17908655	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908659	SRR17908658
+do
+cd $var
+samtools sort $var.rmdup.normal.bam -o $var.sort.bam
+samtools index $var.sort.bam
+bcftools mpileup -f ~/cow/oc2_genome.fasta $var.sort.bam | bcftools call -mv -Oz -o $var.vcf.gz
+cp $var.vcf.gz ~/bam_pipeline/MyFilename/my_genome/vcf/
+cd ..
+done
