@@ -32,3 +32,5 @@ bcftools view  -M2 -v  snps  some.vcf.gz  -o some.bi.vcf
 
 #выполняем pca
 ~/plink --bfile some --pca 4 --allow-extra-chr --threads 15 --bad-freqs  --out some_gen
+
+scp ltursunova@sy2.computing.kiae.ru:~/bam_pipeline/MyFilename/my_genome/vcf/some_gen.eigenval /home/scoollida/DataspellProjects/bash/
