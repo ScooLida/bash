@@ -28,7 +28,7 @@ vcf-merge zz1.vcf.gz zz4.vcf.gz zz5.vcf.gz | bgzip -c > Allzz.vcf.gz
 bcftools view  -M2 -v  snps  some.vcf.gz  -o some.bi.vcf
 
 #получаем нужные bim fam bed
-~/plink --vcf some.vcf.gz  out.vcf  --allow-extra-chr --make-bed --out  some
+~/plink --vcf some.vcf.gz  out.vcf  --allow-extra-chr --threads 15  --make-bed --out  some
 
 #выполняем pca
-~/plink --bfile some --pca 4 --allow-extra-chr --bad-freqs  --out some_gen
+~/plink --bfile some --pca 4 --allow-extra-chr --threads 15 --bad-freqs  --out some_gen
