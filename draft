@@ -28,6 +28,9 @@ vcf-merge zz1.vcf.gz zz4.vcf.gz zz5.vcf.gz | bgzip -c > Allzz.vcf.gz
 #чистит от мультиаллельных локусов, оставляет 1-2
 bcftools view  -M2 -v  snps  some.vcf.gz  -o some.bi.vcf
 
+bcftools view  -M2 -v  snps  almost.chrNum.vcf.gz -o almost.bi.chr.vcf.gz
+
+
 #получаем нужные bim fam bed
 ~/plink --vcf some.vcf.gz  out.vcf  --allow-extra-chr --threads 15  --make-bed --out  some
 
