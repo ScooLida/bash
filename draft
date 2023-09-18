@@ -19,6 +19,7 @@ cp $var.vcf.gz ~/bam_pipeline/MyFilename/my_genome/vcf/
 cd ..
 done
 
+
 --------------------------------
 #соединяет vcf файлы
 tabix -p vcf zz1.vcf.gz
@@ -34,3 +35,10 @@ bcftools view  -M2 -v  snps  some.vcf.gz  -o some.bi.vcf
 ~/plink --bfile some --pca 4 --allow-extra-chr --threads 15 --bad-freqs  --out some_gen
 
 scp ltursunova@sy2.computing.kiae.ru:~/bam_pipeline/MyFilename/my_genome/vcf/some_gen.eigenval /home/scoollida/DataspellProjects/bash/
+
+
+~/admixure/dist/admixture_linux-1.3.0/admixture some.bed 3
+
+
+
+
