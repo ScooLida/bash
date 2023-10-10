@@ -31,6 +31,10 @@ vcf-merge zz1.vcf.gz zz4.vcf.gz zz5.vcf.gz | bgzip -c > Allzz.vcf.gz
 #чистит от мультиаллельных локусов, оставляет 1-2
 bcftools view  -M2 -v snps input.vcf.gz
 
+#удаляет все кроме нужных
+bcftools view test.vcf.gz --regions NC_080855.1 -o test1.vcf
+
+
 #получаем нужные bim fam bed
 ~/plink --vcf out.vcf  --allow-extra-chr --make-bed --out  1307
 
