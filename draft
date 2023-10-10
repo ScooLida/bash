@@ -47,6 +47,41 @@ scp ltursunova@sy2.computing.kiae.ru:~/bam_pipeline/MyFilename/my_genome/vcf/som
 
 ~/admixure/dist/admixture_linux-1.3.0/admixture some.bed 3
 
+##contig=<ID=NC_080832.1,length=172484232>
+##contig=<ID=NC_080833.1,length=166922408>
+##contig=<ID=NC_080834.1,length=121990123>
+##contig=<ID=NC_080835.1,length=113894790>
+##contig=<ID=NC_080836.1,length=108359821>
+##contig=<ID=NC_080837.1,length=88549462>
+##contig=<ID=NC_080838.1,length=87485032>
+##contig=<ID=NC_080839.1,length=83052879>
+##contig=<ID=NC_080840.1,length=81548301>
+##contig=<ID=NC_080841.1,length=78426614>
+##contig=<ID=NC_080842.1,length=73962893>
+##contig=<ID=NC_080843.1,length=71253731>
+##contig=<ID=NC_080844.1,length=69303236>
+##contig=<ID=NC_080845.1,length=65340785>
+##contig=<ID=NC_080846.1,length=58492975>
+##contig=<ID=NC_080847.1,length=58268677>
+##contig=<ID=NC_080848.1,length=55625438>
+##contig=<ID=NC_080849.1,length=53301842>
+##contig=<ID=NC_080850.1,length=51035984>
+##contig=<ID=NC_080851.1,length=43452923>
+##contig=<ID=NC_080852.1,length=42977327>
+##contig=<ID=NC_080853.1,length=40580158>
+##contig=<ID=NC_080854.1,length=39250794>
+##contig=<ID=NC_080855.1,length=38047451>
+##contig=<ID=NC_080856.1,length=34228997>
+##contig=<ID=NC_080857.1,length=32464865>
+##contig=<ID=NC_080858.1,length=28022759>
+##contig=<ID=NC_080859.1,length=26227757>
+##contig=<ID=NC_080860.1,length=25448729>
+##contig=<ID=NC_080861.1,length=22204154>
+##contig=<ID=NC_080862.1,length=16862309>
+##contig=<ID=NC_080863.1,length=15668086>
+##contig=<ID=NC_080864.1,length=8116937>
+##contig=<ID=NC_080865.1,length=107801096>
+##contig=<ID=NC_080866.1,length=34419860>
 
 
 
