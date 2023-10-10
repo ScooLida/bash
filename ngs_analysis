@@ -33,6 +33,8 @@ bcftools view  -M2 -v snps input.vcf.gz
 
 #удаляет все кроме нужных
 bcftools view test.vcf.gz --regions NC_080855.1 -o test1.vcf
+gzip -dk SRR10011655.vcf.gz
+bcftools concat  test4.vcf.gz test5.vcf.gz -n -o  test10.vcf.gz
 
 
 #получаем нужные bim fam bed
