@@ -55,6 +55,9 @@ bcftools view input.vcf.gz --regions NC_080832.1 -o NC_080832.vcf.gz
 bcftools concat  NC_080832.vcf.gz NC_080833.vcf.gz NC_080834.vcf.gz -o CHR.vcf.gz
 bcftools view  -M2 -v snps CHR.vcf.gz -o chr2.xvcf.gz
 
+sed 's/NC_080832.1/832/; s/NC_080833.1/833/; s/NC_080834.1/834/' renamed.vcf > 2renamed.vcf
+
+
 ##contig=<ID=NC_080832.1,length=172484232>
 ##contig=<ID=NC_080833.1,length=166922408>
 ##contig=<ID=NC_080834.1,length=121990123>
