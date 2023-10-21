@@ -51,7 +51,9 @@ scp ltursunova@sy2.computing.kiae.ru:~/bam_pipeline/MyFilename/my_genome/vcf/som
 tabix -p vcf Alltest.vcf.gz
 #по очереди вынимаем хромосомы
 bcftools view input.vcf.gz --regions NC_080832.1 -o NC_080832.vcf.gz
-cftools concat  NC_080832.vcf.gz NC_080833.vcf.gz NC_080834.vcf.gz -o CHR.vcf.gz
+
+bcftools concat  NC_080832.vcf.gz NC_080833.vcf.gz NC_080834.vcf.gz -o CHR.vcf.gz
+bcftools view  -M2 -v snps CHR.vcf.gz -o chr2.xvcf.gz
 
 ##contig=<ID=NC_080832.1,length=172484232>
 ##contig=<ID=NC_080833.1,length=166922408>
