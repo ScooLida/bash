@@ -47,6 +47,12 @@ scp ltursunova@sy2.computing.kiae.ru:~/bam_pipeline/MyFilename/my_genome/vcf/som
 
 ~/admixure/dist/admixture_linux-1.3.0/admixture some.bed 3
 
+#индексируем
+tabix -p vcf Alltest.vcf.gz
+#по очереди вынимаем хромосомы
+bcftools view input.vcf.gz --regions NC_080832.1 -o NC_080832.vcf.gz
+cftools concat  NC_080832.vcf.gz NC_080833.vcf.gz NC_080834.vcf.gz -o CHR.vcf.gz
+
 ##contig=<ID=NC_080832.1,length=172484232>
 ##contig=<ID=NC_080833.1,length=166922408>
 ##contig=<ID=NC_080834.1,length=121990123>
