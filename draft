@@ -43,9 +43,11 @@ bcftools view  -M2 -v  snps  almost.chrNum.vcf.gz -o almost.bi.chr.vcf.gz
 ~/plink --bfile some --pca 4 --allow-extra-chr --threads 15 --bad-freqs  --out some_gen
 
 scp ltursunova@sy2.computing.kiae.ru:~/bam_pipeline/MyFilename/my_genome/vcf/some_gen.eigenval /home/scoollida/DataspellProjects/bash/
-
+SRR17908658.vcf.gz
 
 ~/admixure/dist/admixture_linux-1.3.0/admixture some.bed 3
+vcf-merge 1k.vcf.gz 5k.vcf.gz SRR10012547.vcf.gz SRR11020211.vcf.gz SRR17044867.vcf.gz SRR17908655.vcf.gz SRR5949621.vcf.gz SRR5949630.vcf.gz SRR6485240.vcf.gz SRR6485284.vcf.gz 3k.vcf.gz SRR10082089.vcf.gz SRR11020300.vcf.gz SRR17908653.vcf.gz  SRR5949623.vcf.gz SRR5949632.vcf.gz SRR6485265.vcf.gz 4k.vcf.gz SRR10011655.vcf.gz SRR10082097.vcf.gz SRR12518920.vcf.gz SRR17908654.vcf.gz SRR17908659.vcf.gz SRR5949624.vcf.gz SRR5949634.vcf.gz SRR6485281.vcf.gz | bgzip -c > All.vcf.gz
+
 
 #индексируем
 tabix -p vcf All.vcf.gz
@@ -94,10 +96,9 @@ gzip -dk chr2.vcf.gz
 sed 's/NC_080832.1/832/; s/NC_080833.1/833/; s/NC_080834.1/834/; s/NC_080835.1/835/; s/NC_080836.1/836/; s/NC_080837.1/837/; s/NC_080838.1/838/; s/NC_080839.1/839/; s/NC_080840.1/840/; s/NC_080841.1/841/; s/NC_080842.1/842/; s/NC_080843.1/843/; s/NC_080844.1/844/; s/NC_080845.1/845/; s/NC_080846.1/846/; s/NC_080847.1/847/; s/NC_080848.1/848/; s/NC_080849.1/849/; s/NC_080850.1/850/; s/NC_080851.1/851/; s/NC_080852.1/852/; s/NC_080853.1/853/; s/NC_080854.1/854/; s/NC_080855.1/855/; s/NC_080856.1/856/; s/NC_080857.1/857/; s/NC_080858.1/858/; s/NC_080859.1/859/; s/NC_080860.1/860/; s/NC_080861.1/861/; s/NC_080862.1/862/; s/NC_080863.1/863/; s/NC_080864.1/864/; s/NC_080865.1/865/; s/NC_080866.1/866/;' chr2.vcf > renamed.vcf
 
 bgzip -c renamed.vcf > renamed.vcf.gz
-bcftools view  -M2 -v snps renamed.vcf.gz -c -o 2renamed.vcf.gz
 
 #получаем нужные bim fam bed
-~/plink --vcf 2renamed.vcf.gz  --allow-extra-chr --make-bed --out  some
+~/plink --vcf renamed.vcf.gz  --allow-extra-chr --make-bed --out  some
 
 #выполняем pca
 ~/plink --bfile some --pca 4 --allow-extra-chr --bad-freqs  --out pcagen
