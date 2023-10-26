@@ -53,41 +53,41 @@ vcf-merge 1k.vcf.gz 5k.vcf.gz SRR10012547.vcf.gz SRR11020211.vcf.gz SRR17044867.
 tabix -p vcf All.vcf.gz
 #по очереди вынимаем хромосомы
 #bcftools view input.vcf.gz --regions NC_080832.1 -o NC_080832.vcf.gz
-bcftools view All.vcf.gz --regions NC_080832.1  -o  bcftools view All.vcf.gz --regions NC_080832.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080833.1  -o  bcftools view All.vcf.gz --regions NC_080833.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080834.1  -o  bcftools view All.vcf.gz --regions NC_080834.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080835.1  -o  bcftools view All.vcf.gz --regions NC_080835.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080836.1  -o  bcftools view All.vcf.gz --regions NC_080836.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080837.1  -o  bcftools view All.vcf.gz --regions NC_080837.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080838.1  -o  bcftools view All.vcf.gz --regions NC_080838.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080839.1  -o  bcftools view All.vcf.gz --regions NC_080839.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080840.1  -o  bcftools view All.vcf.gz --regions NC_080840.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080841.1  -o  bcftools view All.vcf.gz --regions NC_080841.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080842.1  -o  bcftools view All.vcf.gz --regions NC_080842.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080843.1  -o  bcftools view All.vcf.gz --regions NC_080843.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080844.1  -o  bcftools view All.vcf.gz --regions NC_080844.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080845.1  -o  bcftools view All.vcf.gz --regions NC_080845.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080846.1  -o  bcftools view All.vcf.gz --regions NC_080846.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080847.1  -o  bcftools view All.vcf.gz --regions NC_080847.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080848.1  -o  bcftools view All.vcf.gz --regions NC_080848.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080849.1  -o  bcftools view All.vcf.gz --regions NC_080849.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080850.1  -o  bcftools view All.vcf.gz --regions NC_080850.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080851.1  -o  bcftools view All.vcf.gz --regions NC_080851.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080852.1  -o  bcftools view All.vcf.gz --regions NC_080852.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080853.1  -o  bcftools view All.vcf.gz --regions NC_080853.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080854.1  -o  bcftools view All.vcf.gz --regions NC_080854.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080855.1  -o  bcftools view All.vcf.gz --regions NC_080855.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080856.1  -o  bcftools view All.vcf.gz --regions NC_080856.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080857.1  -o  bcftools view All.vcf.gz --regions NC_080857.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080858.1  -o  bcftools view All.vcf.gz --regions NC_080858.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080859.1  -o  bcftools view All.vcf.gz --regions NC_080859.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080860.1  -o  bcftools view All.vcf.gz --regions NC_080860.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080861.1  -o  bcftools view All.vcf.gz --regions NC_080861.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080862.1  -o  bcftools view All.vcf.gz --regions NC_080862.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080863.1  -o  bcftools view All.vcf.gz --regions NC_080863.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080864.1  -o  bcftools view All.vcf.gz --regions NC_080864.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080865.1  -o  bcftools view All.vcf.gz --regions NC_080865.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080866.1  -o  bcftools view All.vcf.gz --regions NC_080866.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080832.1  -o   NC_080832.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080833.1  -o   NC_080833.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080834.1  -o  NC_080834.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080835.1  -o NC_080835.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080836.1  -o   NC_080836.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080837.1  -o  NC_080837.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080838.1  -o  NC_080838.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080839.1  -o  NC_080839.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080840.1  -o  NC_080840.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080841.1  -o  NC_080841.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080842.1  -o  NC_080842.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080843.1  -o  NC_080843.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080844.1  -o  NC_080844.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080845.1  -o  NC_080845.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080846.1  -o   NC_080846.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080847.1  -o   NC_080847.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080848.1  -o NC_080848.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080849.1  -o NC_080849.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080850.1  -o  NC_080850.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080851.1  -o  NC_080851.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080852.1  -o  NC_080852.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080853.1  -o  NC_080853.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080854.1  -o   NC_080854.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080855.1  -o  NC_080855.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080856.1  -o  NC_080856.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080857.1  -o  NC_080857.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080858.1  -o  NC_080858.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080859.1  -o   NC_080859.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080860.1  -o  NC_080860.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080861.1  -o   NC_080861.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080862.1  -o  NC_080862.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080863.1  -o  NC_080863.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080864.1  -o   NC_080864.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080865.1  -o   NC_080865.1.vcf.gz
+bcftools view All.vcf.gz --regions NC_080866.1  -o NC_080866.1.vcf.gz
 
 bcftools concat   NC_080832.1.vcf.gz NC_080833.1.vcf.gz NC_080834.1.vcf.gz NC_080835.1.vcf.gz NC_080836.1.vcf.gz NC_080837.1.vcf.gz NC_080838.1.vcf.gz NC_080839.1.vcf.gz NC_080840.1.vcf.gz NC_080841.1.vcf.gz NC_080842.1.vcf.gz NC_080843.1.vcf.gz NC_080844.1.vcf.gz NC_080845.1.vcf.gz NC_080846.1.vcf.gz NC_080847.1.vcf.gz NC_080848.1.vcf.gz NC_080849.1.vcf.gz NC_080850.1.vcf.gz NC_080851.1.vcf.gz NC_080852.1.vcf.gz NC_080853.1.vcf.gz NC_080854.1.vcf.gz NC_080855.1.vcf.gz NC_080856.1.vcf.gz NC_080857.1.vcf.gz NC_080858.1.vcf.gz NC_080859.1.vcf.gz NC_080860.1.vcf.gz NC_080861.1.vcf.gz NC_080862.1.vcf.gz NC_080863.1.vcf.gz NC_080864.1.vcf.gz NC_080865.1.vcf.gz NC_080866.1.vcf.gz -o CHR.vcf.gz
 bcftools view  -M2 -v snps CHR.vcf.gz -o chr2.vcf.gz
