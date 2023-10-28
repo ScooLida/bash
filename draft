@@ -98,10 +98,10 @@ sed 's/NC_080832.1/832/; s/NC_080833.1/833/; s/NC_080834.1/834/; s/NC_080835.1/8
 bgzip -c renamed.vcf > renamed.vcf.gz
 
 #получаем нужные bim fam bed
-~/plink --vcf renamed.vcf.gz  --allow-extra-chr --make-bed --out  some
+~/plink --vcf renamed2.vcf.recode.vcf  --allow-extra-chr --make-bed --out  some
 
 #выполняем pca
-~/plink --bfile some --pca 4 --allow-extra-chr --bad-freqs  --out pcagen
+~/plink --bfile some2 --pca 5 --allow-extra-chr --bad-freqs --threads 15  --out pcagen
 
 ~/admixure/dist/admixture_linux-1.3.0/admixture some.bed 3
 
