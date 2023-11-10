@@ -13,3 +13,10 @@ Did not find the sample: "SRR6485281.sort.bam"
 Did not find any samples in the VCF for "americanus"
 Dsuite: Dsuite_common.cpp:28: void SetInformation::linkSetsAndVCFpositions(const std::vector<std::__cxx11::basic_string<char> >&): Assertion `!spPos.empty()' failed.
 Aborted (core dumped)
+
+
+Did not find the sample: "mss_users/ltursunova/cow/new2/och.fasta"
+1k,5k,SRR10012547,SRR11020211,SRR17044867,SRR17908655,SRR5949621,SRR5949630,SRR6485240,SRR6485284,3k,SRR10082089,SRR11020300,SRR17908653,SRR5949623,SRR5949632,SRR10011655,SRR10082097,SRR12518920,SRR17908654,SRR17908659,SRR5949624,SRR5949634,SRR6485281
+Did not find any samples in the VCF for "Outgroup"
+Dsuite: Dsuite_common.cpp:28: void SetInformation::linkSetsAndVCFpositions(const std::vector<std::__cxx11::basic_string >&): Assertion `!spPos.empty()' failed.
+Aborted (core dumped)
