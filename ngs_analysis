@@ -46,6 +46,7 @@ bcftools concat  test4.vcf.gz test5.vcf.gz -n -o  test10.vcf.gz
 #abba-baba
 ~/Dsuite/Build/Dsuite Dtrios rename3_oc.vcf SETS3.txt --KS-test-for-homoplasy
 
+~/admixure/dist/admixture_linux-1.3.0/admixture renamed32.bed 5
 
 ############################################################################################################
 
