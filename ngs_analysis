@@ -49,6 +49,10 @@ bcftools concat  test4.vcf.gz test5.vcf.gz -n -o  test10.vcf.gz
 ~/admixure/dist/admixture_linux-1.3.0/admixture renamed32.bed 5
 
 ############################################################################################################
+# удаление особи
+vcftools --remove-indv YOUR_INDIVIDUALS_NAME --vcf your_snps.vcf --recode --out your_filtered_snps.vcf
+
+
 
 #удаление адаптеров(есть в paleomix)
 export PATH="$HOME/miniconda/bin:$PATH"
