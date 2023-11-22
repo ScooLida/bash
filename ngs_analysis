@@ -51,6 +51,7 @@ bcftools concat  test4.vcf.gz test5.vcf.gz -n -o  test10.vcf.gz
 ############################################################################################################
 # удаление особи
 vcftools --remove-indv YOUR_INDIVIDUALS_NAME --vcf your_snps.vcf --recode --out your_filtered_snps.vcf
+vcftools --vcf renamed.vcf --max-missing-count 3 --recode --out re1_miss3.vcf
 
 
 
