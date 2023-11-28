@@ -202,3 +202,52 @@ SRR12518920  SRR17908654  SRR17908659  SRR5949624  SRR5949634  SRR6485281
 ##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485281.sort.bam
 
 
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 1k.sort.bam
+##bcftools_callCommand=call -mv -Oz -o 1k.vcf.gz; Date=Sat Oct 21 18:54:43 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 5k.sort.bam
+##bcftools_callCommand=call -mv -Oz -o 5k.vcf.gz; Date=Sat Oct 21 23:26:02 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10012547.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR10012547.vcf.gz; Date=Sun Oct 22 00:08:09 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR11020211.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR11020211.vcf.gz; Date=Sun Oct 22 02:00:55 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17044867.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR17044867.vcf.gz; Date=Sun Oct 22 05:34:42 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908655.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR17908655.vcf.gz; Date=Sun Oct 22 06:06:00 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949621.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR5949621.vcf.gz; Date=Sun Oct 22 10:30:12 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949630.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR5949630.vcf.gz; Date=Sun Oct 22 13:45:02 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485240.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR6485240.vcf.gz; Date=Sun Oct 22 17:11:11 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485284.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR6485284.vcf.gz; Date=Sun Oct 22 17:35:54 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 3k.sort.bam
+##bcftools_callCommand=call -mv -Oz -o 3k.vcf.gz; Date=Sun Oct 22 18:03:02 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10082089.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR10082089.vcf.gz; Date=Sun Oct 22 21:02:12 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR11020300.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR11020300.vcf.gz; Date=Sun Oct 22 21:27:01 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908653.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR17908653.vcf.gz; Date=Mon Oct 23 00:08:17 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949623.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR5949623.vcf.gz; Date=Mon Oct 23 04:44:24 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949632.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR5949632.vcf.gz; Date=Mon Oct 23 08:21:16 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485265.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR6485265.vcf.gz; Date=Mon Oct 23 11:41:20 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 4k.sort.bam
+##bcftools_callCommand=call -mv -Oz -o 4k.vcf.gz; Date=Mon Oct 23 18:14:44 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10011655.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR10011655.vcf.gz; Date=Mon Oct 23 22:42:37 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10082097.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR10082097.vcf.gz; Date=Tue Oct 24 01:39:29 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR12518920.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR12518920.vcf.gz; Date=Tue Oct 24 02:07:21 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908654.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR17908654.vcf.gz; Date=Tue Oct 24 02:27:06 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908659.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR17908659.vcf.gz; Date=Tue Oct 24 06:49:51 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949624.sort.bam
+##bcftools_callCommand=call -mv -Oz -o SRR5949624.vcf.gz; Date=Tue Oct 24 11:15:22 2023
+##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949634.sort.bam
