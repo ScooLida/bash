@@ -43,6 +43,9 @@ bcftools concat  test4.vcf.gz test5.vcf.gz -n -o  test10.vcf.gz
 #выполняем pca
 ~/plink --bfile 1407 --pca 4 --allow-extra-chr --bad-freqs  --out pcagen
 
+
+vcftools --vcf re12_oc_miss3.vcf.recode.vcf --max-missing-count 0 --recode --out re12_oc_miss0.vcf
+
 #abba-baba
 ~/Dsuite/Build/Dsuite Dtrios rename3_oc.vcf SETS3.txt --KS-test-for-homoplasy
 
