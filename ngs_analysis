@@ -2,7 +2,7 @@ export PATH="$HOME/miniconda/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 #скачивание файлов с ncbi
-fasterq-dump --split-files SRR17055867.sra
+fasterq-dump --split-files SRR17055867
 
 #геном Ochotona_princeps
 rsync --copy-links --recursive --times --verbose rsync://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Ochotona_princeps/latest_assembly_versions/GCF_014633375.1_OchPri4.0/ ~/cow/oc 
