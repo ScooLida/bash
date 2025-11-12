@@ -92,54 +92,116 @@ Options:
 # BWA/Bowtie2 index, and optional regions for which additional statistics are produced.
 Prefixes:
   my_genome:
-    Path:  /mss_users/ltursunova/cow/oc2_genome.fasta
+    Path:  /NatureUsers/ltursunova/hare_work/sra/och.fasta
 
-
-  SRR5949621:
-   SRR5949621:
-    Path:  /mss_users/ltursunova/cow/new2/SRR5949621*fastq
-  SRR5949624:
-   SRR5949624:
-    Path:  /mss_users/ltursunova/cow/new2/SRR5949624*fastq
-  SRR5949634:
-   SRR5949634:
-    Path:  /mss_users/ltursunova/cow/new2/SRR5949634*fastq
-  SRR6485265:
-   SRR6485265:
-    Path:  /mss_users/ltursunova/cow/new2/SRR6485265*fastq
+  SRR10011650:
+   SRR10011650:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10011650
+  SRR10011651:
+   SRR10011651:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10011651
+  SRR10011652:
+   SRR10011652:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10011652
+  SRR10011653:
+   SRR10011653:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10011653
+  SRR10011655:
+   SRR10011655:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10011655
+  SRR10011656:
+   SRR10011656:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10011656
+  SRR10012522:
+   SRR10012522:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10012522
+  SRR10012537:
+   SRR10012537:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10012537
+  SRR10012538:
+   SRR10012538:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10012538
+  SRR10012552:
+   SRR10012552:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10012552
+  SRR10082087:
+   SRR10082087:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR10082087
+  SRR11020265:
+   SRR11020265:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR11020265
   SRR11020300:
    SRR11020300:
-    Path:  /mss_users/ltursunova/cow/new2/SRR11020300*fastq
-  SRR17908655:
-   SRR17908655:
-    Path:  /mss_users/ltursunova/cow/new2/SRR17908655*fastq
-  SRR5949623:
-   SRR5949623:
-    Path:  /mss_users/ltursunova/cow/new2/SRR5949623*fastq
-  SRR6485281:
-   SRR6485281:
-    Path:  /mss_users/ltursunova/cow/new2/SRR6485281*fastq
-  SRR17044867:
-   SRR17044867:
-    Path:  /mss_users/ltursunova/cow/new2/SRR17044867*fastq
-  SRR5949630:
-   SRR5949630:
-    Path:  /mss_users/ltursunova/cow/new2/SRR5949630*fastq
-  SRR6485284:
-   SRR6485284:
-    Path:  /mss_users/ltursunova/cow/new2/SRR6485284*fastq
-  SRR11020211:
-   SRR11020211:
-    Path:  /mss_users/ltursunova/cow/new2/SRR11020211*fastq
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR11020300
+  SRR14535615:
+   SRR14535615:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR14535615
+  SRR14535626:
+   SRR14535626:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR14535626
+  SRR14535637:
+   SRR14535637:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR14535637
+  SRR14535670:
+   SRR14535670:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR14535670
+  SRR14535681:
+   SRR14535681:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR14535681
+  SRR14535692:
+   SRR14535692:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR14535692
+  SRR17908653:
+   SRR17908653:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR17908653
   SRR17908654:
    SRR17908654:
-    Path:  /mss_users/ltursunova/cow/new2/SRR17908654*fastq
-  SRR17908659:
-   SRR17908659:
-    Path:  /mss_users/ltursunova/cow/new2/SRR17908659*fastq
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR17908654
+  SRR17908655:
+   SRR17908655:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR17908655
+  SRR17908657:
+   SRR17908657:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR17908657
   SRR17908658:
    SRR17908658:
-    Path:  /mss_users/ltursunova/cow/new2/SRR17908658*fastq
-  SRR5949632:
-   SRR5949632:
-    Path:  /mss_users/ltursunova/cow/new2/SRR5949632*fastq
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR17908658
+  SRR17908659:
+   SRR17908659:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR17908659
+  SRR5949621:
+   SRR5949621:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949621
+  SRR5949622:
+   SRR5949622:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949622
+  SRR5949623:
+   SRR5949623:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949623
+  SRR5949624:
+   SRR5949624:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949624
+  SRR5949627:
+   SRR5949627:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949627
+  SRR5949628:
+   SRR5949628:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949628
+  SRR5949629:
+   SRR5949629:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949629
+  SRR5949633:
+   SRR5949633:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR5949633
+  SRR6485205:
+   SRR6485205:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR6485205
+  SRR6485214:
+   SRR6485214:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR6485214
+  SRR6485215:
+   SRR6485215:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR6485215
+  SRR6485216:
+   SRR6485216:
+    Path:  /NatureUsers/ltursunova/hare_work/sra/SRR6485216
