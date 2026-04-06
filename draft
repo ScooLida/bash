@@ -24,32 +24,64 @@ date "+%H:%M %d.%m.%Y"
 
 mkdir ./psms
 
+which fq2psmcfa
 
-samtools view -b --sample DonHare1 -o ./psms/DonHare1_only.bam input_merged.bam
-samtools index ./psms/DonHare1_only.bam
+#!/bin/bash
 
+# --- НАСТРОЙКИ (проверь пути!) ---
+LIST="list_psmc.txt"              # Файл со списком образцов (SM names)
+MERGED_BAM="input_merged.bam"     # Твой общий BAM файл
+REF="reference.fasta"             # Референс зайца
+OUT_DIR="./psms"                  # Куда класть результат
+PSMC_UTILS="/path/to/psmc/utils"  # ПУТЬ к папке psmc/utils (там fq2psmcfa)
+MUTATION_RATE="2.5e-08"           # Скорость мутации
+GENERATION_TIME="2"               # Время генерации
 
-# Проходим циклом по всем разделенным BAM-файлам
-for bam in *.bam; do
-    sample=$(basename "$bam" .bam)
-    echo "Processing sample: $sample"
+# Создаем папки
+mkdir -p $OUT_DIR
 
-    samtools mpileup -uf reference.fasta "$bam" | \
+# --- ЦИКЛ ОБРАБОТКИ ---
+while read -r sample; do
+    echo ">>>>>>> ОБРАБОТКА ОБРАЗЦА: $sample [$(date +'%H:%M:%S')] <<<<<<<"
+
+    # 1. Извлекаем образец из общего BAM
+    samtools view -b --sample "$sample" "$MERGED_BAM" -o "$OUT_DIR/${sample}_raw.bam"
+
+    # 2. ШАГ ДЛЯ ДРЕВНЕЙ ДНК: Режем хвосты по 3 нуклеотида
+    # (Нужен пакет bamUtil или команда trimBam)
+    trimBam "$OUT_DIR/${sample}_raw.bam" "$OUT_DIR/${sample}_trimmed.bam" 3
+    
+    # Индексируем обрезанный файл
+    samtools index "$OUT_DIR/${sample}_trimmed.bam"
+
+    # 3. Делаем консенсус (FASTQ) без жестких фильтров глубины
+    samtools mpileup -uf "$REF" "$OUT_DIR/${sample}_trimmed.bam" | \
     bcftools call -c | \
-    vcfutils.pl vcf2fq > "${sample}.fastq
+    vcfutils.pl vcf2fq > "$OUT_DIR/${sample}.fastq"
 
-    # 2. Конвертация FASTQ в PSMCFA
-    # Это формат, где геном разбит на бины (обычно по 100 bp)
-    $PSMC_UTILS/fq2psmcfa "${sample}.fastq" > "${sample}.psmcfa"
+    # 4. Подготовка для PSMC (бинирование)
+    $PSMC_UTILS/fq2psmcfa "$OUT_DIR/${sample}.fastq" > "$OUT_DIR/${sample}.psmcfa"
 
-    echo "Done with $sample"
-done
-perl psmc_plot.pl -u 2.5e-08 -g 2 combined_plot sample1.psmc sample2.psmc sample3.psmc
+    # 5. Запуск расчета PSMC
+    psmc -N25 -t15 -r5 -p "4+25*2+4+6" -o "$OUT_DIR/${sample}.psmc" "$OUT_DIR/${sample}.psmcfa"
+
+    # Чистим временные тяжелые BAM-файлы (опционально, чтобы не забить диск)
+    # rm "$OUT_DIR/${sample}_raw.bam" "$OUT_DIR/${sample}_trimmed.bam"
+
+    echo ">>>>>>> ГОТОВО: $sample <<<<<<<"
+
+done < "$LIST"
+
+# --- ФИНАЛЬНЫЙ ГРАФИК ---
+echo "СТРОИМ ОБЩИЙ ГРАФИК..."
+ALL_PSMC=$(ls $OUT_DIR/*.psmc)
+perl psmc_plot.pl -u $MUTATION_RATE -g $GENERATION_TIME "$OUT_DIR/combined_plot" $ALL_PSMC
+
+echo "ВСЁ! Результаты в папке $OUT_DIR"
 
 
 
-
-
+chmod +x run_hare_psmc.sh
 
 
 
