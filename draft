@@ -1,260 +1,46 @@
+conda create -n psmc_env -c bioconda psmc samtools bcftools gnuplot
+conda activate psmc_env
+perl -v
+psmc
 
-fasterq-dump --split-files SRR17908654
-for var in SRR17908653 SRR6485240
-do
-cd $var
-bcftools mpileup -f ~/cow/oc2_genome.fasta $var.rmdup.normal.bam | bcftools call -mv -Oz -o $var.vcf.gz
-cd ..
-cp ./$var/$var.vcf.gz ./vcf
+#na vcakuu sluchai
+#git clone https://github.com/lh3/psmc.git
+#cd psmc
+#make
+# Чтобы работали дополнительные скрипты (например, fq2psmcfa)
+#cd utils && make
+
+#!/bin/bash
+
+# Путь к скриптам PSMC 
+#PSMC_UTILS="/path/to/psmc/utils"
+
+script -a session.log 
+date "+%H:%M %d.%m.%Y" 
+
+mkdir ./psms
+
+
+samtools view -b --sample DonHare1 -o ./psms/DonHare1_only.bam input_merged.bam
+samtools index ./psms/DonHare1_only.bam
+
+
+# Проходим циклом по всем разделенным BAM-файлам
+for bam in *.bam; do
+    sample=$(basename "$bam" .bam)
+    echo "Processing sample: $sample"
+
+    samtools mpileup -uf reference.fasta "$bam" | \
+    bcftools call -c | \
+    vcfutils.pl vcf2fq > "${sample}.fastq
+
+    # 2. Конвертация FASTQ в PSMCFA
+    # Это формат, где геном разбит на бины (обычно по 100 bp)
+    $PSMC_UTILS/fq2psmcfa "${sample}.fastq" > "${sample}.psmcfa"
+
+    echo "Done with $sample"
 done
-
-
-for var in SRR11020300	SRR17908655	SRR6485281	SRR17044867	SRR5949630	SRR6485284	SRR11020211	SRR17908659	SRR17908658
-do
-cd $var
-samtools sort $var.rmdup.normal.bam -o $var.sort.bam
-samtools index $var.sort.bam
-bcftools mpileup -f ~/cow/oc2_genome.fasta $var.sort.bam | bcftools call -mv -Oz -o $var.vcf.gz
-cp $var.vcf.gz ~/bam_pipeline/MyFilename/my_genome/vcf/
-cd ..
-done
-
-
---------------------------------
-#соединяет vcf файлы
-tabix -p vcf zz1.vcf.gz
-vcf-merge zz1.vcf.gz zz4.vcf.gz zz5.vcf.gz | bgzip -c > Allzz.vcf.gz
-
-zcat Almostll.vcf.gz |\
-        sed s/^NC_0//g |\
-        gzip > almost.chrNum.vcf.gz
-
-
-#чистит от мультиаллельных локусов, оставляет 1-2
-bcftools view  -M2 -v  snps  some.vcf.gz  -o some.bi.vcf
-
-bcftools view  -M2 -v  snps  almost.chrNum.vcf.gz -o almost.bi.chr.vcf.gz
-
-
-#получаем нужные bim fam bed
-~/plink --vcf some.vcf.gz  out.vcf  --allow-extra-chr --threads 15  --make-bed --out  some
-
-#выполняем pca
-~/plink --bfile some --pca 4 --allow-extra-chr --threads 15 --bad-freqs  --out some_gen
-
-scp ltursunova@sy2.computing.kiae.ru:~/bam_pipeline/MyFilename/my_genome/vcf/some_gen.eigenval /home/scoollida/DataspellProjects/bash/
-SRR17908658.vcf.gz
-
-~/admixure/dist/admixture_linux-1.3.0/admixture some.bed 3
-vcf-merge 1k.vcf.gz 5k.vcf.gz SRR10012547.vcf.gz SRR11020211.vcf.gz SRR17044867.vcf.gz SRR17908655.vcf.gz SRR5949621.vcf.gz SRR5949630.vcf.gz SRR6485240.vcf.gz SRR6485284.vcf.gz 3k.vcf.gz SRR10082089.vcf.gz SRR11020300.vcf.gz SRR17908653.vcf.gz  SRR5949623.vcf.gz SRR5949632.vcf.gz SRR6485265.vcf.gz 4k.vcf.gz SRR10011655.vcf.gz SRR10082097.vcf.gz SRR12518920.vcf.gz SRR17908654.vcf.gz SRR17908659.vcf.gz SRR5949624.vcf.gz SRR5949634.vcf.gz SRR6485281.vcf.gz | bgzip -c > All.vcf.gz
-
-
-#индексируем
-tabix -p vcf All.vcf.gz
-#по очереди вынимаем хромосомы
-#bcftools view input.vcf.gz --regions NC_080832.1 -o NC_080832.vcf.gz
-bcftools view All.vcf.gz --regions NC_080832.1  -o   NC_080832.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080833.1  -o   NC_080833.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080834.1  -o  NC_080834.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080835.1  -o NC_080835.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080836.1  -o   NC_080836.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080837.1  -o  NC_080837.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080838.1  -o  NC_080838.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080839.1  -o  NC_080839.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080840.1  -o  NC_080840.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080841.1  -o  NC_080841.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080842.1  -o  NC_080842.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080843.1  -o  NC_080843.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080844.1  -o  NC_080844.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080845.1  -o  NC_080845.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080846.1  -o   NC_080846.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080847.1  -o   NC_080847.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080848.1  -o NC_080848.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080849.1  -o NC_080849.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080850.1  -o  NC_080850.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080851.1  -o  NC_080851.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080852.1  -o  NC_080852.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080853.1  -o  NC_080853.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080854.1  -o   NC_080854.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080855.1  -o  NC_080855.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080856.1  -o  NC_080856.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080857.1  -o  NC_080857.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080858.1  -o  NC_080858.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080859.1  -o   NC_080859.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080860.1  -o  NC_080860.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080861.1  -o   NC_080861.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080862.1  -o  NC_080862.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080863.1  -o  NC_080863.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080864.1  -o   NC_080864.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080865.1  -o   NC_080865.1.vcf.gz
-bcftools view All.vcf.gz --regions NC_080866.1  -o NC_080866.1.vcf.gz
-
-bcftools concat   NC_080832.1.vcf.gz NC_080833.1.vcf.gz NC_080834.1.vcf.gz NC_080835.1.vcf.gz NC_080836.1.vcf.gz NC_080837.1.vcf.gz NC_080838.1.vcf.gz NC_080839.1.vcf.gz NC_080840.1.vcf.gz NC_080841.1.vcf.gz NC_080842.1.vcf.gz NC_080843.1.vcf.gz NC_080844.1.vcf.gz NC_080845.1.vcf.gz NC_080846.1.vcf.gz NC_080847.1.vcf.gz NC_080848.1.vcf.gz NC_080849.1.vcf.gz NC_080850.1.vcf.gz NC_080851.1.vcf.gz NC_080852.1.vcf.gz NC_080853.1.vcf.gz NC_080854.1.vcf.gz NC_080855.1.vcf.gz NC_080856.1.vcf.gz NC_080857.1.vcf.gz NC_080858.1.vcf.gz NC_080859.1.vcf.gz NC_080860.1.vcf.gz NC_080861.1.vcf.gz NC_080862.1.vcf.gz NC_080863.1.vcf.gz NC_080864.1.vcf.gz NC_080865.1.vcf.gz NC_080866.1.vcf.gz -o CHR.vcf.gz
-bcftools view  -M2 -v snps CHR.vcf.gz -o chr2.vcf.gz
-gzip -dk chr2.vcf.gz
-
-sed 's/NC_080832.1/832/; s/NC_080833.1/833/; s/NC_080834.1/834/; s/NC_080835.1/835/; s/NC_080836.1/836/; s/NC_080837.1/837/; s/NC_080838.1/838/; s/NC_080839.1/839/; s/NC_080840.1/840/; s/NC_080841.1/841/; s/NC_080842.1/842/; s/NC_080843.1/843/; s/NC_080844.1/844/; s/NC_080845.1/845/; s/NC_080846.1/846/; s/NC_080847.1/847/; s/NC_080848.1/848/; s/NC_080849.1/849/; s/NC_080850.1/850/; s/NC_080851.1/851/; s/NC_080852.1/852/; s/NC_080853.1/853/; s/NC_080854.1/854/; s/NC_080855.1/855/; s/NC_080856.1/856/; s/NC_080857.1/857/; s/NC_080858.1/858/; s/NC_080859.1/859/; s/NC_080860.1/860/; s/NC_080861.1/861/; s/NC_080862.1/862/; s/NC_080863.1/863/; s/NC_080864.1/864/; s/NC_080865.1/865/; s/NC_080866.1/866/;' chr2.vcf > renamed.vcf
-
-bgzip -c renamed.vcf > renamed.vcf.gz
-
-#получаем нужные bim fam bed
-~/plink --vcf renamed2.vcf.recode.vcf  --allow-extra-chr --make-bed --out  some
-
-#выполняем pca
-~/plink --bfile some2 --pca 5 --allow-extra-chr --bad-freqs --threads 15  --out pcagen
-
-~/admixure/dist/admixture_linux-1.3.0/admixture some.bed 3
-
-
-
-SRR12518920  SRR17908654  SRR17908659  SRR5949624  SRR5949634  SRR6485281  
-##contig=<ID=NC_080832.1,length=172484232>
-##contig=<ID=NC_080833.1,length=166922408>
-##contig=<ID=NC_080834.1,length=121990123>
-##contig=<ID=NC_080835.1,length=113894790>
-##contig=<ID=NC_080836.1,length=108359821>
-##contig=<ID=NC_080837.1,length=88549462>
-##contig=<ID=NC_080838.1,length=87485032>
-##contig=<ID=NC_080839.1,length=83052879>
-##contig=<ID=NC_080840.1,length=81548301>
-##contig=<ID=NC_080841.1,length=78426614>
-##contig=<ID=NC_080842.1,length=73962893>
-##contig=<ID=NC_080843.1,length=71253731>
-##contig=<ID=NC_080844.1,length=69303236>
-##contig=<ID=NC_080845.1,length=65340785>
-##contig=<ID=NC_080846.1,length=58492975>
-##contig=<ID=NC_080847.1,length=58268677>
-##contig=<ID=NC_080848.1,length=55625438>
-##contig=<ID=NC_080849.1,length=53301842>
-##contig=<ID=NC_080850.1,length=51035984>
-##contig=<ID=NC_080851.1,length=43452923>
-##contig=<ID=NC_080852.1,length=42977327>
-##contig=<ID=NC_080853.1,length=40580158>
-##contig=<ID=NC_080854.1,length=39250794>
-##contig=<ID=NC_080855.1,length=38047451>
-##contig=<ID=NC_080856.1,length=34228997>
-##contig=<ID=NC_080857.1,length=32464865>
-##contig=<ID=NC_080858.1,length=28022759>
-##contig=<ID=NC_080859.1,length=26227757>
-##contig=<ID=NC_080860.1,length=25448729>
-##contig=<ID=NC_080861.1,length=22204154>
-##contig=<ID=NC_080862.1,length=16862309>
-##contig=<ID=NC_080863.1,length=15668086>
-##contig=<ID=NC_080864.1,length=8116937>
-##contig=<ID=NC_080865.1,length=107801096>
-##contig=<ID=NC_080866.1,length=34419860>
-
-
-1k  5k SRR10012547  SRR11020211  SRR17044867  SRR17908655  SRR5949621  SRR5949630  SRR6485240  SRR6485284 3k SRR10082089  SRR11020300  SRR17908653  SRR17908658  SRR5949623  SRR5949632  SRR6485265   4k  SRR10011655  SRR10082097  SRR12518920  SRR17908654  SRR17908659  SRR5949624  SRR5949634  SRR6485281  
-
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 1k.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 5k.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10012547.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR11020211.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17044867.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908655.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949621.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949630.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485240.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485284.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 3k.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10082089.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR11020300.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908653.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949623.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949632.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485265.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 4k.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10011655.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10082097.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR12518920.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908654.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908659.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949624.sort.bam
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949634.sort.bam
-
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR6485281.sort.bam
-
-
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/newS/och.fasta OCH.sort.bam
-##bcftools_callCommand=call -mv -Oz -o All.vcf.gz; Date=Mon Oct 30 12:53:56 2023
-##bcftools_viewCommand=view --regions 832 -o NC_080832.1.vcf.gz All.vcf.gz; Date=Tue Oct 31 06:46:04 2023
-##bcftools_concatCommand=concat -o CHR.vcf.gz 832.vcf.gz 833.vcf.gz 834.vcf.gz 835.vcf.gz 836.vcf.gz 837.vcf.gz 838.vcf.gz 839.vcf.gz 840.vcf.gz 841.vcf.gz 842.vcf.gz 843.vcf.gz 844.vcf.gz 845.vcf.gz 846.vcf.gz 847.vcf.gz 848.vcf.gz 849.>
-##bcftools_viewCommand=view -M2 -v snps -o chr2.vcf.gz CHR.vcf.gz; Date=Tue Oct 31 06:51:41 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 1k.sort.bam
-##bcftools_callCommand=call -mv -Oz -o 1k.vcf.gz; Date=Sat Oct 21 18:54:43 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 5k.sort.bam
-##bcftools_callCommand=call -mv -Oz -o 5k.vcf.gz; Date=Sat Oct 21 23:26:02 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10012547.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR10012547.vcf.gz; Date=Sun Oct 22 00:08:09 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR11020211.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR11020211.vcf.gz; Date=Sun Oct 22 02:00:55 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908655.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR17908655.vcf.gz; Date=Sun Oct 22 06:06:00 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949621.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR5949621.vcf.gz; Date=Sun Oct 22 10:30:12 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949630.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR5949630.vcf.gz; Date=Sun Oct 22 13:45:02 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 3k.sort.bam
-##bcftools_callCommand=call -mv -Oz -o 3k.vcf.gz; Date=Sun Oct 22 18:03:02 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR11020300.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR11020300.vcf.gz; Date=Sun Oct 22 21:27:01 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908653.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR17908653.vcf.gz; Date=Mon Oct 23 00:08:17 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949623.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR5949623.vcf.gz; Date=Mon Oct 23 04:44:24 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949632.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR5949632.vcf.gz; Date=Mon Oct 23 08:21:16 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta 4k.sort.bam
-##bcftools_callCommand=call -mv -Oz -o 4k.vcf.gz; Date=Mon Oct 23 18:14:44 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR10011655.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR10011655.vcf.gz; Date=Mon Oct 23 22:42:37 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR12518920.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR12518920.vcf.gz; Date=Tue Oct 24 02:07:21 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908654.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR17908654.vcf.gz; Date=Tue Oct 24 02:27:06 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR17908659.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR17908659.vcf.gz; Date=Tue Oct 24 06:49:51 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949624.sort.bam
-##bcftools_callCommand=call -mv -Oz -o SRR5949624.vcf.gz; Date=Tue Oct 24 11:15:22 2023
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/new2/och.fasta SRR5949634.sort.bam
-##reference=file:///mss_users/ltursunova/cow/new2/och.fasta
-##bcftools_callCommand=call -mv -Oz -o SRR5949634.vcf.gz; Date=Tue Oct 24 14:31:38 2023
-##bcftoolsVersion=1.13+htslib-1.13+ds
-##bcftoolsCommand=mpileup -f /mss_users/ltursunova/cow/newS/och.fasta SRR11020265.rmdup.normal.bam
-##reference=file:///mss_users/ltursunova/cow/newS/och.fasta
-##contig=<ID=832,length=172484232>
-
-
-
-
-
+perl psmc_plot.pl -u 2.5e-08 -g 2 combined_plot sample1.psmc sample2.psmc sample3.psmc
 
 
 
