@@ -3,6 +3,10 @@ conda activate psmc_env
 perl -v
 psmc
 
+
+# Установить можно через conda: conda install -c bioconda bamutil
+trimBam input.bam output_trimmed.bam 3
+
 #na vcakuu sluchai
 #git clone https://github.com/lh3/psmc.git
 #cd psmc
