@@ -30,10 +30,10 @@ which fq2psmcfa
 
 # --- НАСТРОЙКИ (проверь пути!) ---
 LIST="list_psmc.txt"              # Файл со списком образцов (SM names)
-MERGED_BAM="input_merged.bam"     # Твой общий BAM файл
-REF="reference.fasta"             # Референс зайца
+MERGED_BAM="MyKrol2.sort.bam"     # Твой общий BAM файл
+REF="krol_g.fasta"             # Референс зайца
 OUT_DIR="./psms"                  # Куда класть результат
-PSMC_UTILS="/path/to/psmc/utils"  # ПУТЬ к папке psmc/utils (там fq2psmcfa)
+PSMC_UTILS="/NatureUsers/ltursunova/miniconda3/envs/psmc_env/bin/fq2psmcfa"  # ПУТЬ к папке psmc/utils (там fq2psmcfa)
 MUTATION_RATE="2.5e-08"           # Скорость мутации
 GENERATION_TIME="2"               # Время генерации
 
@@ -57,6 +57,7 @@ while read -r sample; do
     # 3. Делаем консенсус (FASTQ) без жестких фильтров глубины
     samtools mpileup -uf "$REF" "$OUT_DIR/${sample}_trimmed.bam" | \
     bcftools call -c | \
+    bcftools filter -i 'QUAL>=30 && DP>15 && MQ>25' | \
     vcfutils.pl vcf2fq > "$OUT_DIR/${sample}.fastq"
 
     # 4. Подготовка для PSMC (бинирование)
