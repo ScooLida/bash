@@ -2,9 +2,32 @@
 # The script scans a folder with aligned genes in FASTA format,
 # counts gaps (dashes) and reports how many genes remain when using a
 # "minimum __ percent of nucleotides" filter across the whole file.
+# It also creates a list of gene names whose gap percentage is below a threshold.
 
 # Input directory
 INPUT_DIR="./astral_pipeline/perfect_aligned_genes"
+
+# Gap percentage threshold for creating a gene list
+TRESHOLD_FOR_LIST=30
+LIST_PERCENT_GAPS="list${TRESHOLD_FOR_LIST}_percent_gap.txt"
+
+# Create a list of genes with gap percentage <= threshold
+make_gene_list() {
+    local threshold=$1
+    local outfile=$2
+    > "$outfile"
+    for file in "$INPUT_DIR"/*.fasta; do
+        [ -e "$file" ] || continue
+        local total_chars=$(grep -v "^>" "$file" | tr -d '\n' | wc -c)
+        [ "$total_chars" -eq 0 ] && continue
+        local gaps=$(grep -v "^>" "$file" | tr -d -c '-' | wc -c)
+        local pct=$(( gaps * 100 / total_chars ))
+        if [ "$pct" -le "$threshold" ]; then
+            basename "$file" .fasta >> "$outfile"
+        fi
+    done
+    echo "Gene list saved to: $outfile ($(wc -l < "$outfile") genes)"
+}
 
 
 echo "=== Alignment quality analysis ==="
@@ -58,3 +81,6 @@ echo "Remaining at threshold <= 20% gaps:  $c20"
 echo "Remaining at threshold <= 10% gaps:  $c10"
 echo "Remaining at threshold <= 5%  gaps:  $c5"
 echo "------------------------------------------------"
+
+echo ""
+make_gene_list "$TRESHOLD_FOR_LIST" "$LIST_PERCENT_GAPS"
