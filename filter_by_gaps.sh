@@ -1,13 +1,15 @@
 #!/bin/bash
-#скрипт просматривает папку с выровнянными генами в формате фасты, считает пропуски и выдает сколько получится генов при использовании фильтра "минимум __ процентов нуклеотидов" на весь файл 
+# The script scans a folder with aligned genes in FASTA format,
+# counts gaps (dashes) and reports how many genes remain when using a
+# "minimum __ percent of nucleotides" filter across the whole file.
 
-# исходная папка 
+# Input directory
 INPUT_DIR="./astral_pipeline/perfect_aligned_genes"
 
 
-echo "=== Анализ качества выравниваний ==="
+echo "=== Alignment quality analysis ==="
 
-# Инициализируем счетчики
+# Initialize counters
 total=0
 c65=0
 c50=0
@@ -19,20 +21,20 @@ c5=0
 
 for file in "$INPUT_DIR"/*.fasta; do
     [ -e "$file" ] || continue
-    
-    # 1. Считаем общее количество нуклеотидов (игнорируя строки заголовков с '>')
+
+    # 1. Count total nucleotides (ignoring header lines starting with '>')
     total_chars=$(grep -v "^>" "$file" | tr -d '\n' | wc -c)
-    
-    # 2. Считаем количество прочерков (-)
+
+    # 2. Count dashes ('-')
     gaps=$(grep -v "^>" "$file" | tr -d -c '-' | wc -c)
-    
-    # Защита от деления на ноль (если файл пустой)
+
+    # Guard against division by zero (in case the file is empty)
     if [ "$total_chars" -eq 0 ]; then continue; fi
-    
-    # 3. Высчитываем процент пропусков
+
+    # 3. Calculate gap percentage
     pct=$(( gaps * 100 / total_chars ))
-    
-    # 4. Распределяем по категориям
+
+    # 4. Assign to categories
     ((total++))
     if [ "$pct" -le 65 ]; then ((c65++)); fi
     if [ "$pct" -le 50 ]; then ((c50++)); fi
@@ -45,14 +47,14 @@ done
 
 echo ""
 echo "------------------------------------------------"
-echo "Всего проанализировано генов: $total"
+echo "Total genes analyzed: $total"
 echo "------------------------------------------------"
-echo "Останется при пороге <= 65% пропусков:  $c65"
-echo "Останется при пороге <= 50% пропусков:  $c50"
-echo "Останется при пороге <= 40% пропусков:  $c40"
+echo "Remaining at threshold <= 65% gaps:  $c65"
+echo "Remaining at threshold <= 50% gaps:  $c50"
+echo "Remaining at threshold <= 40% gaps:  $c40"
 echo "------------------------------------------------"
-echo "Останется при пороге <= 30% пропусков:  $c30"
-echo "Останется при пороге <= 20% пропусков:  $c20"
-echo "Останется при пороге <= 10% пропусков:  $c10"
-echo "Останется при пороге <= 5%  пропусков:  $c5"
+echo "Remaining at threshold <= 30% gaps:  $c30"
+echo "Remaining at threshold <= 20% gaps:  $c20"
+echo "Remaining at threshold <= 10% gaps:  $c10"
+echo "Remaining at threshold <= 5%  gaps:  $c5"
 echo "------------------------------------------------"
