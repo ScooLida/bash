@@ -1,3 +1,4 @@
+#makefile for paleomix
 Options:
   # Sequencing platform, see SAM/BAM reference for valid values
   Platform: Illumina
