@@ -1,8 +1,15 @@
 #!/bin/bash
-# scr_04_bam_to_busco.sh
+# This script extracts genes from BAM files and filters them.
 # Pipeline: extract gene loci from BAM files using a BUSCO BED file,
 # merge per-sample FASTAs into one file per gene, and filter the merged FASTAs.
 # Genes shorter than MIN_SEQ_LENGTH are discarded after extraction.
+# Filtering checks:
+#   - gene length is not longer than MAX_SEQ_LENGTH;
+#   - overall ATGC content in the gene is at least MIN_ATGC_PERCENT;
+#   - every sample has at least MIN_NUCLEOTIDES_PER_SAMPLE ATGC nucleotides
+#     (both uppercase and lowercase letters count);
+#   - only genes with all REQUIRED_SAMPLES present and each having at least
+#     MIN_ATGC_PERCENT ATGC are kept.
 # At the end, a text file (GOLD_LIST) is created with the names of genes that passed filtering.
 
 # ==============================================================================
@@ -20,6 +27,7 @@ SLEEP_INTERVAL=0.1
 MIN_SEQ_LENGTH=10      # Genes shorter than this are discarded after extraction
 MAX_SEQ_LENGTH=5000    # Genes longer than this are discarded during filtering
 MIN_ATGC_PERCENT=30    # Minimum ATGC percentage for a gene to pass filtering
+MIN_NUCLEOTIDES_PER_SAMPLE=30   # Minimum ATGC count for every sample in a gene
 REQUIRED_SAMPLES="1k,4k,5kS8,3k"
 PROGRESS_INTERVAL=500  # Print progress every N files during filtering
 
@@ -173,7 +181,7 @@ for file in "$COMBINED_DIR"/*.fasta; do
     [ -e "$file" ] || continue
     gene=$(basename "$file" .fasta)
 
-    res=$(awk -v max_len="$MAX_SEQ_LENGTH" -v min_atgc="$MIN_ATGC_PERCENT" -v req_samples="$REQUIRED_SAMPLES" '
+    res=$(awk -v max_len="$MAX_SEQ_LENGTH" -v min_atgc="$MIN_ATGC_PERCENT" -v min_nuc="$MIN_NUCLEOTIDES_PER_SAMPLE" -v req_samples="$REQUIRED_SAMPLES" '
     BEGIN {
         split(req_samples, req, ",");
         for(i in req) required[req[i]]=1;
@@ -200,6 +208,9 @@ for file in "$COMBINED_DIR"/*.fasta; do
         for (sid in seqs) {
             s = seqs[sid]; len = length(s); all_len += len;
             gsub(/[^ATGCatgc]/, "", s); let_cnt = length(s); all_let += let_cnt;
+
+            # Every sample must have enough nucleotides
+            if (let_cnt < min_nuc) missing_or_bad_req = 1;
 
             if (sid in required) {
                 required_found[sid] = 1;
@@ -235,7 +246,7 @@ echo "FILTERING STATISTICS:"
 echo "========================================================================"
 echo "Input genes:                $total_files"
 echo "Passed length filter:       $passed_length (removed $((total_files - passed_length)) giants)"
-echo "Passed quality filter:  $passed_vip"
+echo "Passed VIP/quality filter:  $passed_vip"
 echo "========================================================================"
 echo "A list of passed genes is saved to: $GOLD_LIST"
 echo "(The actual FASTA files remain in $COMBINED_DIR.)"
