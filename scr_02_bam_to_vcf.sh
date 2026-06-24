@@ -16,7 +16,7 @@ THREADS=7
 DATA="MyHare"
 QUAL=20
 DEPTH=3
-REFERENCE="$HOME/hare_work/krol_g.fasta"
+REFERENCE="/hare_work/krol_g.fasta"
 
 # Path to your chromosome list file (leave as is if it is in the same folder)
 CHROM_LIST="chr.txt"
@@ -61,7 +61,7 @@ cat sample_list.txt | parallel --tmpdir . --bar -j $THREADS "
 "
 
 echo "Done, looking for .vcf.gz files"
-# 2. Build a strict merge list (ONLY our required samples, no junk)
+# 2. Build a strict merge list (ONLY our required samples)
 for SAMPLE in $(cat sample_list.txt); do
   echo "${SAMPLE}.vcf.gz" >> vcf_to_merge.txt
 done
