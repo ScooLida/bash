@@ -23,8 +23,8 @@ REQUIRED_SAMPLES="1k,4k,5kS8,3k"
 PROGRESS_INTERVAL=500  # Print progress every N files during filtering
 
 WORK_DIR="./subset_parallel/pipeline_bulletproof_final"
-EXTRACTED_DIR="$WORK_DIR/1_extracted_fasta"
-COMBINED_DIR="$WORK_DIR/2_combined_unaligned"
+EXTRACTED_DIR="$WORK_DIR/extracted_fasta"
+COMBINED_DIR="$WORK_DIR/combined_unaligned"
 EXTRACTED_GENES_LIST="$WORK_DIR/extracted_genes_list.txt"
 GOLD_LIST="$WORK_DIR/gold_genes_list.txt"
 # ==============================================================================
