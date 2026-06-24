@@ -3,6 +3,7 @@
 # Pipeline: extract gene loci from BAM files using a BUSCO BED file,
 # merge per-sample FASTAs into one file per gene, and filter the merged FASTAs.
 # Genes shorter than MIN_SEQ_LENGTH are discarded after extraction.
+# At the end, a text file (GOLD_LIST) is created with the names of genes that passed filtering.
 
 # ==============================================================================
 # --- CONFIG (all variables in one place) --------------------------------------
@@ -236,4 +237,5 @@ echo "Input genes:                $total_files"
 echo "Passed length filter:       $passed_length (removed $((total_files - passed_length)) giants)"
 echo "Passed VIP/quality filter:  $passed_vip"
 echo "========================================================================"
-echo "Result saved to: $GOLD_LIST"
+echo "A list of passed genes is saved to: $GOLD_LIST"
+echo "(The actual FASTA files remain in $COMBINED_DIR.)"
