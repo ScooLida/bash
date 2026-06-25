@@ -54,12 +54,18 @@ cat sample_list.txt | parallel --tmpdir . --bar -j $THREADS "
   if [ -f '{}.vcf.gz.tbi' ]; then
     echo '[SKIP] Sample {} is already ready.'
   else
+    # Проверяем наличие индекса .bam.bai, если его нет — создаем
+    if [ ! -f $HOME/hare_work/MyKrol2/my_genome/{}/{}.rescaled.bam.bai ]; then
+      echo '[INDEX] Creating index for {}...'
+      samtools index $HOME/hare_work/MyKrol2/my_genome/{}/{}.rescaled.bam
+    fi
+
+    # Запуск основного пайплайна
     bcftools mpileup -a DP -d 250 -R $CHROM_LIST -f $REFERENCE $HOME/hare_work/MyKrol2/my_genome/{}/{}.rescaled.bam | \
     bcftools call -mv -Oz -o {}.vcf.gz && \
     tabix -p vcf {}.vcf.gz
   fi
 "
-
 echo "Done, looking for .vcf.gz files"
 # 2. Build a strict merge list (ONLY our required samples)
 for SAMPLE in $(cat sample_list.txt); do
