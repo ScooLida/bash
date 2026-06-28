@@ -67,7 +67,10 @@ cat sample_list.txt | parallel --tmpdir . --bar -j $THREADS "
   fi
 "
 echo "Done, looking for .vcf.gz files"
+
 # 2. Build a strict merge list (ONLY our required samples)
+# Исправлено: Сначала полностью очищаем файл перед записью
+> vcf_to_merge.txt 
 for SAMPLE in $(cat sample_list.txt); do
   echo "${SAMPLE}.vcf.gz" >> vcf_to_merge.txt
 done
@@ -79,7 +82,8 @@ tabix -p vcf ${DATA}_merged.vcf.gz
 
 # 4. Filter (Quality >= 20 AND Depth >= 3)
 echo "Filtering..."
-bcftools view ${DATA}_merged.vcf.gz -e "QUAL < ${QUAL} || FMT/DP < ${DEPTH}" -O z -o ${DATA}.vcf.gz
+# Исправлено: убран пробел в -Oz, добавлено MIN() для корректной фильтрации выборки
+bcftools view ${DATA}_merged.vcf.gz -e "QUAL < ${QUAL} || MIN(FMT/DP) < ${DEPTH}" -Oz -o ${DATA}.vcf.gz
 tabix -p vcf ${DATA}.vcf.gz
 
 echo "Successfully completed! Final file: ${DATA}.vcf.gz"
