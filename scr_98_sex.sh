@@ -69,6 +69,6 @@ done
 
 echo "Done. Results:"
 column -t "$result_file"
-C
+
 
 
