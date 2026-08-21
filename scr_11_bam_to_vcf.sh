@@ -31,7 +31,10 @@ if [ ! -f "$REFERENCE" ]; then
     exit 1
 fi
 
-mapfile -t SAMPLES < <(awk 'NF { print $1 }' "$SAMPLE_LIST")
+mapfile -t SAMPLES < <(
+    tr -d '\r' < "$SAMPLE_LIST" |
+        awk 'NF { print $1 }'
+)
 if [ "${#SAMPLES[@]}" -eq 0 ]; then
     echo "Error: sample list is empty."
     exit 1
@@ -48,7 +51,12 @@ for sample in "${SAMPLES[@]}"; do
 done
 
 call_sample() {
-    local sample=$1
+    local sample="${1:-}"
+    if [ -z "$sample" ]; then
+        echo "Error: empty sample identifier." >&2
+        return 1
+    fi
+
     local bam="$BAM_DIR/$sample/$sample.rescaled.bam"
     local output="$VCF_DIR/$sample.vcf.gz"
 
@@ -61,17 +69,24 @@ call_sample() {
         samtools index "$bam"
     fi
 
-    bcftools mpileup -a DP -d 250 -R "$CHROM_LIST" -f "$REFERENCE" "$bam" |
-        bcftools call -mv -Oz -o "$output"
+    if ! bcftools mpileup -a DP -d 250 -R "$CHROM_LIST" -f "$REFERENCE" "$bam" |
+        bcftools call -mv -Oz -o "$output"; then
+        echo "Error: variant calling failed for sample: $sample" >&2
+        return 1
+    fi
     tabix -p vcf "$output"
 }
 export -f call_sample
 export BAM_DIR CHROM_LIST REFERENCE VCF_DIR
 
 printf '%s\n' "${SAMPLES[@]}" |
-    parallel --tmpdir . --bar -j "$THREADS" bash -c 'call_sample "$@"' _ {}
+    parallel --tmpdir . --bar -j "$THREADS" \
+        bash -c 'set -euo pipefail; call_sample "$@"' _ {}
 
-printf '%s\n' "${SAMPLES[@]/#/$VCF_DIR/}" | sed 's/$/.vcf.gz/' > "$MERGE_LIST"
+: > "$MERGE_LIST"
+for sample in "${SAMPLES[@]}"; do
+    printf '%s\n' "$VCF_DIR/$sample.vcf.gz" >> "$MERGE_LIST"
+done
 
 MERGED_VCF="${DATA_PREFIX}_merged_all.vcf.gz"
 bcftools merge -l "$MERGE_LIST" -Oz -o "$MERGED_VCF"
