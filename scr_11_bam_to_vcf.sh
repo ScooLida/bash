@@ -6,9 +6,9 @@
 set -euo pipefail
 
 # Configuration
-THREADS=7
+THREADS=3
 REFERENCE="$HOME/hare_work/krol_g.fasta"
-BAM_DIR="$HOME/hare_work/MyKrol2/my_genome"
+BAM_DIR="$HOME/hare_work/My_new_krol/my_genome"
 SAMPLE_LIST="sample_list.txt"
 CHROM_LIST="chr.txt"
 VCF_DIR="./per_sample_vcfs"
