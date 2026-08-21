@@ -80,8 +80,7 @@ export -f call_sample
 export BAM_DIR CHROM_LIST REFERENCE VCF_DIR
 
 printf '%s\n' "${SAMPLES[@]}" |
-    parallel --tmpdir . --bar -j "$THREADS" \
-        bash -c 'set -euo pipefail; call_sample "$@"' _ {}
+    parallel --tmpdir . --bar -j "$THREADS" call_sample {}
 
 : > "$MERGE_LIST"
 for sample in "${SAMPLES[@]}"; do
