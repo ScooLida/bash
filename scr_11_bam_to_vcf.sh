@@ -17,6 +17,41 @@ DATA_PREFIX="MyHare"
 QUAL=20
 DEPTH=3
 EXCLUDED_SAMPLES=("1k" "3k" "5k" "5kS8")
+SCRIPT_PATH="$(readlink -f "$0")"
+
+call_sample() {
+    local sample="${1:-}"
+    if [ -z "$sample" ]; then
+        echo "Error: empty sample identifier." >&2
+        return 1
+    fi
+
+    local bam="$BAM_DIR/$sample/$sample.rescaled.bam"
+    local output="$VCF_DIR/$sample.vcf.gz"
+
+    if [ -f "$output" ] && [ -f "$output.tbi" ]; then
+        echo "VCF already exists: $sample"
+        return
+    fi
+
+    if [ ! -f "$bam.bai" ] && [ ! -f "${bam%.bam}.bai" ] && [ ! -f "$bam.csi" ]; then
+        samtools index "$bam"
+    fi
+
+    echo "Starting variant calling: $sample"
+    if ! bcftools mpileup -a DP -d 250 -R "$CHROM_LIST" -f "$REFERENCE" "$bam" |
+        bcftools call -mv -Oz -o "$output"; then
+        echo "Error: variant calling failed for sample: $sample" >&2
+        return 1
+    fi
+    tabix -p vcf "$output"
+    echo "Completed variant calling: $sample"
+}
+
+if [ "${1:-}" = "__call_sample" ]; then
+    call_sample "${2:-}"
+    exit $?
+fi
 
 if [ ! -f "$SAMPLE_LIST" ]; then
     echo "Error: sample list not found: $SAMPLE_LIST"
@@ -50,37 +85,8 @@ for sample in "${SAMPLES[@]}"; do
     fi
 done
 
-call_sample() {
-    local sample="${1:-}"
-    if [ -z "$sample" ]; then
-        echo "Error: empty sample identifier." >&2
-        return 1
-    fi
-
-    local bam="$BAM_DIR/$sample/$sample.rescaled.bam"
-    local output="$VCF_DIR/$sample.vcf.gz"
-
-    if [ -f "$output" ] && [ -f "$output.tbi" ]; then
-        echo "VCF already exists: $sample"
-        return
-    fi
-
-    if [ ! -f "$bam.bai" ] && [ ! -f "${bam%.bam}.bai" ] && [ ! -f "$bam.csi" ]; then
-        samtools index "$bam"
-    fi
-
-    if ! bcftools mpileup -a DP -d 250 -R "$CHROM_LIST" -f "$REFERENCE" "$bam" |
-        bcftools call -mv -Oz -o "$output"; then
-        echo "Error: variant calling failed for sample: $sample" >&2
-        return 1
-    fi
-    tabix -p vcf "$output"
-}
-export -f call_sample
-export BAM_DIR CHROM_LIST REFERENCE VCF_DIR
-
 printf '%s\n' "${SAMPLES[@]}" |
-    parallel --tmpdir . --bar -j "$THREADS" call_sample {}
+    parallel --tmpdir . --bar -j "$THREADS" "$SCRIPT_PATH" __call_sample {}
 
 : > "$MERGE_LIST"
 for sample in "${SAMPLES[@]}"; do
