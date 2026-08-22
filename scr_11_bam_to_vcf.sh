@@ -86,7 +86,8 @@ for sample in "${SAMPLES[@]}"; do
 done
 
 printf '%s\n' "${SAMPLES[@]}" |
-    parallel --tmpdir . --bar -j "$THREADS" "$SCRIPT_PATH" __call_sample {}
+    parallel --tmpdir . --bar -j "$THREADS" \
+        bash "$SCRIPT_PATH" __call_sample {}
 
 : > "$MERGE_LIST"
 for sample in "${SAMPLES[@]}"; do
