@@ -5,9 +5,10 @@
 set -euo pipefail
 
 # Configuration
-# Put one sample ID per line in this file. Empty lines and lines starting with
+# Put one sample ID per line in SAMPLES. Empty lines and lines starting with
 # '#' are ignored.
-SAMPLES_FILE="./samples.txt"
+SAMPLES="./samples.txt"
+# Previous inline list:
 # SAMPLES="SRR14535670,SRR32541919"
 EXCLUDED_SAMPLES="1k,3k,5k,5kS8"
 DATASET_WITHOUT="without_1k_3k_5k_5kS8"
@@ -60,8 +61,8 @@ filter_fasta_samples() {
 > "$EXTRACTED_GENES_LIST"
 if [ ! -f "${REF_GENOME}.fai" ]; then samtools faidx "$REF_GENOME"; fi
 
-if [ ! -f "$SAMPLES_FILE" ]; then
-    echo "Error: sample list not found: $SAMPLES_FILE" >&2
+if [ ! -f "$SAMPLES" ]; then
+    echo "Error: sample list not found: $SAMPLES" >&2
     exit 1
 fi
 
@@ -69,10 +70,10 @@ mapfile -t SAMPLE_ARRAY < <(
     awk '{
         sub(/\r$/, "", $1)
         if ($1 != "" && $1 !~ /^#/) print $1
-    }' "$SAMPLES_FILE"
+    }' "$SAMPLES"
 )
 if [ "${#SAMPLE_ARRAY[@]}" -eq 0 ]; then
-    echo "Error: sample list is empty: $SAMPLES_FILE" >&2
+    echo "Error: sample list is empty: $SAMPLES" >&2
     exit 1
 fi
 TOTAL_GENES=$(wc -l < "$BED_FILE")
