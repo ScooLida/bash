@@ -7,7 +7,7 @@ set -euo pipefail
 # Configuration
 # Put one sample ID per line in SAMPLES. Empty lines and lines starting with
 # '#' are ignored.
-SAMPLES="./samples.txt"
+SAMPLES="samples.txt"
 # Previous inline list:
 # SAMPLES="SRR14535670,SRR32541919"
 EXCLUDED_SAMPLES="1k,3k,5k,5kS8"
