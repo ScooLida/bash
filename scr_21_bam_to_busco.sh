@@ -101,6 +101,11 @@ for sample in "${SAMPLE_ARRAY[@]}"; do
             new_fasta="$EXTRACTED_DIR/$sample/${gene}.fasta"
             temp_ref="$EXTRACTED_DIR/$sample/${gene}_ref.fasta"
 
+            if [ -s "$new_fasta" ] &&
+                [ "$(grep -v '^>' "$new_fasta" | tr -d '\n' | wc -c)" -gt "$MIN_SEQ_LENGTH" ]; then
+                exit 0
+            fi
+
             samtools faidx "$REF_GENOME" "$region" > "$temp_ref"
             bcftools mpileup -Ou -f "$REF_GENOME" -r "$region" "$bam" |
                 bcftools call -c -Oz -o "$temp_vcf"
