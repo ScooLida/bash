@@ -17,16 +17,21 @@ Run the scripts in this order:
 ### `scr_11_bam_to_vcf.sh`
 
 Calls variants from Paleomix BAM files, restricts variant calling to regions
-listed in `chr.txt`, merges per-sample VCF files, and creates two filtered VCF
-datasets: one containing modern samples only, and one with all samples.
+listed in `chr.txt`, and merges per-sample VCF files. Modern samples then define
+the filtered variant positions. The all-sample VCF is restricted to exactly the
+same positions, while ancient samples with no call remain missing (`./.`).
 
 Filters: `QUAL >= 20` and `MIN(FMT/DP) >= 3`.
 
 ### `scr_12_pca_admixture.sh`
 
-Runs PLINK PCA and ADMIXTURE for both VCF datasets. PLINK applies `--geno 0.2`
-and calculates four principal components. ADMIXTURE tests `K=2..15` and saves
-the K with the lowest cross-validation error.
+Runs PCA for modern and all-sample datasets using the modern-selected
+positions. PLINK applies `--geno 0.2` only to modern samples. ADMIXTURE tests
+`K=2..15` on modern samples, selects the lowest cross-validation error, and
+then uses projection mode (`-P`) for all samples. The modern `.P` matrix is
+fixed, so ancient samples receive ancestry proportions without re-estimating
+the modern model. Ancient-only results are saved to
+`population_analysis/ancient_projection_K<K>.tsv`.
 
 ### `scr_13_population_plots.R`
 
@@ -56,7 +61,9 @@ Filters and settings: `MIN_COVERAGE=2`, discard sequences shorter than
 
 Aligns modern FASTA files first with MAFFT using nine parallel jobs, then adds
 ancient sequences to the modern alignments with `mafft --addfragments`. This
-preserves the modern alignment as the backbone.
+preserves the modern alignment as the backbone. If an ancient sample has no
+sequence for a selected locus, the all-sample alignment contains an `N` sequence
+of the same length as the modern alignment.
 
 ### `scr_23_filter_by_gaps.sh`
 

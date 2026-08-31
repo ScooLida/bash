@@ -1,6 +1,7 @@
 #!/bin/bash
 # Align modern BUSCO loci first, then add ancient sequences to the fixed
-# modern alignments without changing the modern alignment columns.
+# modern alignments without changing the modern alignment columns. Missing
+# ancient sequences are represented by Ns across the full alignment.
 
 set -euo pipefail
 
@@ -30,7 +31,19 @@ align_gene() {
         echo "Error: all-sample FASTA not found or empty: $all_source" >&2
         return 1
     fi
-    if [ -s "$modern_output" ] && [ -s "$all_output" ]; then
+    IFS=',' read -r -a ancient_samples <<< "$ANCIENT_SAMPLES"
+    all_ancient_present=true
+    if [ -s "$all_output" ]; then
+        for sample in "${ancient_samples[@]}"; do
+            if ! grep -qE "^>${sample}([[:space:]]|$)" "$all_output"; then
+                all_ancient_present=false
+                break
+            fi
+        done
+    else
+        all_ancient_present=false
+    fi
+    if [ -s "$modern_output" ] && [ -s "$all_output" ] && "$all_ancient_present"; then
         return 0
     fi
 
@@ -57,6 +70,19 @@ align_gene() {
     else
         cp "$modern_output" "$all_output"
     fi
+
+    alignment_length=$(awk '!/^>/{print length($0); exit}' "$modern_output")
+    if [ -z "$alignment_length" ] || [ "$alignment_length" -le 0 ]; then
+        echo "Error: could not determine alignment length: $modern_output" >&2
+        return 1
+    fi
+
+    for sample in "${ancient_samples[@]}"; do
+        if ! grep -qE "^>${sample}([[:space:]]|$)" "$all_output"; then
+            printf ">%s\n" "$sample" >> "$all_output"
+            printf '%*s\n' "$alignment_length" '' | tr ' ' 'N' >> "$all_output"
+        fi
+    done
 }
 
 if [ "${1:-}" = "__align_gene" ]; then

@@ -1,7 +1,8 @@
 #!/bin/bash
 # Call and filter variants from Paleomix BAM files.
-# Per-sample VCFs are generated once, then two filtered datasets are created:
-# one containing modern samples only, and one with all samples.
+# Per-sample VCFs are generated once. Modern samples define the filtered variant
+# sites; the all-sample VCF keeps exactly those sites and retains missing ancient
+# genotypes instead of using ancient coverage to remove a site.
 
 set -euo pipefail
 
@@ -14,6 +15,8 @@ CHROM_LIST="chr.txt"
 VCF_DIR="./per_sample_vcfs"
 MERGE_LIST="./vcf_to_merge.txt"
 DATA_PREFIX="MyHare"
+SELECTED_SITES="./${DATA_PREFIX}_modern_selected_sites.tsv"
+MODERN_MERGE_LIST="./vcf_to_merge_modern.txt"
 QUAL=20
 DEPTH=3
 ANCIENT_SAMPLES=("1k" "3k" "4k" "5kS8")
@@ -89,15 +92,6 @@ printf '%s\n' "${SAMPLES[@]}" |
     parallel --tmpdir . --bar -j "$THREADS" \
         bash "$SCRIPT_PATH" __call_sample {}
 
-: > "$MERGE_LIST"
-for sample in "${SAMPLES[@]}"; do
-    printf '%s\n' "$VCF_DIR/$sample.vcf.gz" >> "$MERGE_LIST"
-done
-
-MERGED_VCF="${DATA_PREFIX}_merged_all.vcf.gz"
-bcftools merge -l "$MERGE_LIST" -Oz -o "$MERGED_VCF"
-tabix -p vcf "$MERGED_VCF"
-
 is_ancient() {
     local candidate=$1
     local ancient
@@ -106,6 +100,19 @@ is_ancient() {
     done
     return 1
 }
+
+: > "$MERGE_LIST"
+: > "$MODERN_MERGE_LIST"
+for sample in "${SAMPLES[@]}"; do
+    printf '%s\n' "$VCF_DIR/$sample.vcf.gz" >> "$MERGE_LIST"
+    if ! is_ancient "$sample"; then
+        printf '%s\n' "$VCF_DIR/$sample.vcf.gz" >> "$MODERN_MERGE_LIST"
+    fi
+done
+
+MERGED_VCF="${DATA_PREFIX}_merged_all.vcf.gz"
+bcftools merge -l "$MERGE_LIST" -Oz -o "$MERGED_VCF"
+tabix -p vcf "$MERGED_VCF"
 
 ALL_SAMPLE_FILE="${DATA_PREFIX}_samples_all.txt"
 MODERN_SAMPLE_FILE="${DATA_PREFIX}_samples_modern.txt"
@@ -118,24 +125,46 @@ printf '%s\n' "${SAMPLES[@]}" > "$ALL_SAMPLE_FILE"
     done
 } > "$MODERN_SAMPLE_FILE"
 
-filter_dataset() {
-    local label=$1
-    local sample_file=$2
-    local output="${DATA_PREFIX}_${label}.vcf.gz"
-
-    if [ ! -s "$sample_file" ]; then
-        echo "Error: no samples remain for dataset $label."
+filter_modern_dataset() {
+    if [ ! -s "$MODERN_SAMPLE_FILE" ]; then
+        echo "Error: no modern samples remain." >&2
         return 1
     fi
 
-    bcftools view -S "$sample_file" \
+    MERGED_MODERN_VCF="${DATA_PREFIX}_merged_modern.vcf.gz"
+    bcftools merge -l "$MODERN_MERGE_LIST" -Oz -o "$MERGED_MODERN_VCF"
+    tabix -p vcf "$MERGED_MODERN_VCF"
+
+    bcftools view \
         -e "QUAL < ${QUAL} || MIN(FMT/DP) < ${DEPTH}" \
-        -Oz -o "$output" "$MERGED_VCF"
-    tabix -p vcf "$output"
-    echo "Created: $output"
+        -Oz -o "${DATA_PREFIX}_modern.vcf.gz" "$MERGED_MODERN_VCF"
+    tabix -p vcf "${DATA_PREFIX}_modern.vcf.gz"
+    echo "Created: ${DATA_PREFIX}_modern.vcf.gz"
 }
 
-filter_dataset "modern" "$MODERN_SAMPLE_FILE"
-filter_dataset "with_all_samples" "$ALL_SAMPLE_FILE"
+filter_modern_dataset
+
+# Use modern-selected variant positions as the master list for the all-sample
+# dataset. Merge the filtered modern VCF with ancient VCFs at those positions;
+# missing ancient genotypes remain ./., rather than removing the site.
+bcftools query -f '%CHROM\t%POS\t%POS\n' \
+    "${DATA_PREFIX}_modern.vcf.gz" > "$SELECTED_SITES"
+if [ ! -s "$SELECTED_SITES" ]; then
+    echo "Error: no modern variants passed filtering." >&2
+    exit 1
+fi
+
+ALL_MERGE_INPUTS=("${DATA_PREFIX}_modern.vcf.gz")
+for sample in "${SAMPLES[@]}"; do
+    if is_ancient "$sample"; then
+        ALL_MERGE_INPUTS+=("$VCF_DIR/$sample.vcf.gz")
+    fi
+done
+
+bcftools merge -R "$SELECTED_SITES" -Oz \
+    -o "${DATA_PREFIX}_with_all_samples.vcf.gz" \
+    "${ALL_MERGE_INPUTS[@]}"
+tabix -p vcf "${DATA_PREFIX}_with_all_samples.vcf.gz"
+echo "Created: ${DATA_PREFIX}_with_all_samples.vcf.gz"
 
 echo "Variant calling and filtering complete."
