@@ -1,6 +1,6 @@
 #!/bin/bash
 # Extract BUSCO gene loci from BAM files and prepare two FASTA datasets:
-# one without 1k, 3k, 5k, and 5kS8, and one with all available samples.
+# one containing modern samples only, and one with modern plus ancient samples.
 
 set -euo pipefail
 
@@ -10,8 +10,8 @@ set -euo pipefail
 SAMPLES="samples.txt"
 # Previous inline list:
 # SAMPLES="SRR14535670,SRR32541919"
-EXCLUDED_SAMPLES="1k,3k,5k,5kS8"
-DATASET_WITHOUT="without_1k_3k_5k_5kS8"
+ANCIENT_SAMPLES="1k,3k,4k,5kS8"
+DATASET_MODERN="modern"
 DATASET_WITH_ALL="with_all_samples"
 REF_GENOME="$HOME/hare_work/krol_g.fasta"
 BED_FILE="$HOME/hare_work/krol_genes_fixed.bed"
@@ -26,33 +26,33 @@ MIN_SEQ_LENGTH=10
 WORK_DIR="./subset_parallel/pipeline_bulletproof_final"
 EXTRACTED_DIR="$WORK_DIR/extracted_fasta"
 EXTRACTED_GENES_LIST="$WORK_DIR/extracted_genes_list.txt"
-COMBINED_WITHOUT_DIR="$WORK_DIR/combined_unaligned_${DATASET_WITHOUT}"
+COMBINED_MODERN_DIR="$WORK_DIR/combined_unaligned_${DATASET_MODERN}"
 COMBINED_WITH_ALL_DIR="$WORK_DIR/combined_unaligned_${DATASET_WITH_ALL}"
 
-mkdir -p "$EXTRACTED_DIR" "$COMBINED_WITHOUT_DIR" "$COMBINED_WITH_ALL_DIR"
+mkdir -p "$EXTRACTED_DIR" "$COMBINED_MODERN_DIR" "$COMBINED_WITH_ALL_DIR"
 
 display_time() {
     local seconds=$1
     printf "%02d:%02d:%02d" $((seconds / 3600)) $(((seconds % 3600) / 60)) $((seconds % 60))
 }
 
-is_excluded_sample() {
+is_ancient_sample() {
     local sample=$1
-    [[ ",${EXCLUDED_SAMPLES}," == *",${sample},"* ]]
+    [[ ",${ANCIENT_SAMPLES}," == *",${sample},"* ]]
 }
 
 filter_fasta_samples() {
     local input_file=$1
     local output_file=$2
-    awk -v excluded="$EXCLUDED_SAMPLES" '
+    awk -v ancient="$ANCIENT_SAMPLES" '
         BEGIN {
-            split(excluded, names, ",")
-            for (i in names) excluded_sample[names[i]] = 1
+            split(ancient, names, ",")
+            for (i in names) ancient_sample[names[i]] = 1
         }
         /^>/ {
             sample = $1
             sub(/^>/, "", sample)
-            keep = !(sample in excluded_sample)
+            keep = !(sample in ancient_sample)
         }
         keep { print }
     ' "$input_file" >> "$output_file"
@@ -144,27 +144,35 @@ for sample in "${SAMPLE_ARRAY[@]}"; do
 done
 sort -u "$EXTRACTED_GENES_LIST" -o "$EXTRACTED_GENES_LIST"
 
+# Include loci already present in the legacy FASTA collection, even when a
+# newly processed sample has no sequence for that locus.
+for old_fasta in "$OLD_GENES_DIR"/*.fasta; do
+    [ -e "$old_fasta" ] || continue
+    basename "$old_fasta" .fasta >> "$EXTRACTED_GENES_LIST"
+done
+sort -u "$EXTRACTED_GENES_LIST" -o "$EXTRACTED_GENES_LIST"
+
 while read -r gene; do
     [ -z "$gene" ] && continue
-    combined_without="$COMBINED_WITHOUT_DIR/${gene}.fasta"
+    combined_modern="$COMBINED_MODERN_DIR/${gene}.fasta"
     combined_all="$COMBINED_WITH_ALL_DIR/${gene}.fasta"
-    : > "$combined_without"
+    : > "$combined_modern"
     : > "$combined_all"
 
     old_fasta="$OLD_GENES_DIR/${gene}.fasta"
     if [ -f "$old_fasta" ]; then
         cat "$old_fasta" >> "$combined_all"
-        filter_fasta_samples "$old_fasta" "$combined_without"
+        filter_fasta_samples "$old_fasta" "$combined_modern"
     fi
 
     for sample in "${SAMPLE_ARRAY[@]}"; do
         fasta="$EXTRACTED_DIR/$sample/${gene}.fasta"
         [ -f "$fasta" ] || continue
         cat "$fasta" >> "$combined_all"
-        if ! is_excluded_sample "$sample"; then cat "$fasta" >> "$combined_without"; fi
+        if ! is_ancient_sample "$sample"; then cat "$fasta" >> "$combined_modern"; fi
     done
 done < "$EXTRACTED_GENES_LIST"
 
 echo "BUSCO extraction and two FASTA datasets are ready."
-echo "Without excluded samples: $COMBINED_WITHOUT_DIR"
+echo "Modern samples only: $COMBINED_MODERN_DIR"
 echo "With all samples: $COMBINED_WITH_ALL_DIR"

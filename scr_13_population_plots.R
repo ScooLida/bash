@@ -5,7 +5,7 @@
 # Configuration
 ANALYSIS_DIR <- "./population_analysis"
 PLOT_DIR <- file.path(ANALYSIS_DIR, "plots")
-DATASETS <- c("without_1k_3k_5k_5kS8", "with_all_samples")
+DATASETS <- c("modern", "with_all_samples")
 
 if (!requireNamespace("ggplot2", quietly = TRUE)) {
   stop("The ggplot2 package is required. Install it with install.packages('ggplot2').")

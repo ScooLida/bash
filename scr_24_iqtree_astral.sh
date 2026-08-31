@@ -1,5 +1,6 @@
 #!/bin/bash
-# Build IQ-TREE gene trees and ASTRAL species trees for both BUSCO datasets.
+# Build a modern-only backbone tree first, then build a second tree after
+# adding ancient samples to the same modern-selected loci.
 
 set -euo pipefail
 
@@ -9,11 +10,35 @@ WORK_DIR="./subset_parallel/pipeline_bulletproof_final"
 MODEL="GTR+G"
 ASTRAL_JAR="$HOME/Astral/astral.5.16.3.jar"
 GAP_THRESHOLD=30
-DATASET_WITHOUT="without_1k_3k_5k_5kS8"
+DATASET_MODERN="modern"
 DATASET_WITH_ALL="with_all_samples"
-DATASETS=("$DATASET_WITHOUT" "$DATASET_WITH_ALL")
+SCRIPT_PATH="$(readlink -f "$0")"
 
-run_dataset() {
+build_gene_tree() {
+    local dataset=$1
+    local gene=$2
+    local align_dir="$WORK_DIR/final_alignments_${dataset}"
+    local trees_dir="$WORK_DIR/gene_trees_${dataset}"
+    local input="$align_dir/${gene}.fasta"
+    local prefix="$trees_dir/$gene"
+
+    if [ ! -s "$input" ]; then
+        echo "Error: alignment not found or empty: $input" >&2
+        return 1
+    fi
+    if [ -s "${prefix}.treefile" ]; then
+        return 0
+    fi
+    iqtree -s "$input" -st DNA -m "$MODEL" -nt 1 \
+        --prefix "$prefix" -quiet
+}
+
+if [ "${1:-}" = "__gene_tree" ]; then
+    build_gene_tree "${2:-}" "${3:-}"
+    exit $?
+fi
+
+build_dataset_trees() {
     local dataset=$1
     local align_dir="$WORK_DIR/final_alignments_${dataset}"
     local gene_list="$WORK_DIR/list_${GAP_THRESHOLD}_percent_gap_${dataset}.txt"
@@ -22,40 +47,38 @@ run_dataset() {
     local astral_output="$WORK_DIR/astral_species_tree_${dataset}.tre"
 
     if [ ! -d "$align_dir" ] || [ ! -f "$gene_list" ]; then
-        echo "Error: missing alignment directory or gene list for $dataset"
+        echo "Error: missing alignment directory or gene list for $dataset" >&2
         return 1
     fi
     mkdir -p "$trees_dir"
 
-    run_iqtree() {
-        local gene=$1
-        local input="$align_dir/${gene}.fasta"
-        [ -f "$input" ] || return 0
-        iqtree -s "$input" -st DNA -m "$MODEL" -nt 1 \
-            --prefix "$trees_dir/$gene" -quiet
-    }
-    export -f run_iqtree
-    export align_dir trees_dir MODEL
     grep -v '^$' "$gene_list" |
-        xargs -P "$THREADS" -I {} bash -c 'run_iqtree "{}"'
+        xargs -P "$THREADS" -I {} bash "$SCRIPT_PATH" __gene_tree "$dataset" "{}"
 
     : > "$all_trees"
-    for treefile in "$trees_dir"/*.treefile; do
-        [ -e "$treefile" ] || continue
+    while read -r gene; do
+        [ -z "$gene" ] && continue
+        treefile="$trees_dir/$gene.treefile"
+        if [ ! -s "$treefile" ]; then
+            echo "Error: gene tree not found or empty: $treefile" >&2
+            return 1
+        fi
         cat "$treefile" >> "$all_trees"
-    done
+    done < "$gene_list"
+
     if [ ! -s "$all_trees" ]; then
-        echo "Error: no gene trees generated for $dataset"
+        echo "Error: no gene trees generated for $dataset" >&2
+        return 1
+    fi
+    if [ ! -f "$ASTRAL_JAR" ]; then
+        echo "Error: ASTRAL jar not found: $ASTRAL_JAR" >&2
         return 1
     fi
 
-    if [ ! -f "$ASTRAL_JAR" ]; then
-        echo "Error: ASTRAL jar not found: $ASTRAL_JAR"
-        return 1
-    fi
     java -jar "$ASTRAL_JAR" -i "$all_trees" -o "$astral_output" \
         2> "$WORK_DIR/astral_${dataset}.log"
     echo "Species tree saved to: $astral_output"
 }
 
-for dataset in "${DATASETS[@]}"; do run_dataset "$dataset"; done
+build_dataset_trees "$DATASET_MODERN"
+build_dataset_trees "$DATASET_WITH_ALL"

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Call and filter variants from Paleomix BAM files.
 # Per-sample VCFs are generated once, then two filtered datasets are created:
-# one without 1k, 3k, 5k, and 5kS8, and one with all samples.
+# one containing modern samples only, and one with all samples.
 
 set -euo pipefail
 
@@ -16,7 +16,7 @@ MERGE_LIST="./vcf_to_merge.txt"
 DATA_PREFIX="MyHare"
 QUAL=20
 DEPTH=3
-EXCLUDED_SAMPLES=("1k" "3k" "5k" "5kS8")
+ANCIENT_SAMPLES=("1k" "3k" "4k" "5kS8")
 SCRIPT_PATH="$(readlink -f "$0")"
 
 call_sample() {
@@ -98,25 +98,25 @@ MERGED_VCF="${DATA_PREFIX}_merged_all.vcf.gz"
 bcftools merge -l "$MERGE_LIST" -Oz -o "$MERGED_VCF"
 tabix -p vcf "$MERGED_VCF"
 
-is_excluded() {
+is_ancient() {
     local candidate=$1
-    local excluded
-    for excluded in "${EXCLUDED_SAMPLES[@]}"; do
-        [ "$candidate" = "$excluded" ] && return 0
+    local ancient
+    for ancient in "${ANCIENT_SAMPLES[@]}"; do
+        [ "$candidate" = "$ancient" ] && return 0
     done
     return 1
 }
 
 ALL_SAMPLE_FILE="${DATA_PREFIX}_samples_all.txt"
-WITHOUT_SAMPLE_FILE="${DATA_PREFIX}_samples_without_1k_3k_5k_5kS8.txt"
+MODERN_SAMPLE_FILE="${DATA_PREFIX}_samples_modern.txt"
 printf '%s\n' "${SAMPLES[@]}" > "$ALL_SAMPLE_FILE"
 {
     for sample in "${SAMPLES[@]}"; do
-        if ! is_excluded "$sample"; then
+        if ! is_ancient "$sample"; then
             printf '%s\n' "$sample"
         fi
     done
-} > "$WITHOUT_SAMPLE_FILE"
+} > "$MODERN_SAMPLE_FILE"
 
 filter_dataset() {
     local label=$1
@@ -135,7 +135,7 @@ filter_dataset() {
     echo "Created: $output"
 }
 
-filter_dataset "without_1k_3k_5k_5kS8" "$WITHOUT_SAMPLE_FILE"
+filter_dataset "modern" "$MODERN_SAMPLE_FILE"
 filter_dataset "with_all_samples" "$ALL_SAMPLE_FILE"
 
 echo "Variant calling and filtering complete."

@@ -1,12 +1,12 @@
 #!/bin/bash
-# Run PCA and ADMIXTURE twice: without 1k, 3k, 5k, and 5kS8, then with all samples.
+# Run PCA and ADMIXTURE for modern samples, then for all samples.
 # ADMIXTURE is tested across a K range and the K with the lowest CV error is reported.
 
 set -euo pipefail
 
 # Configuration
 DATA_PREFIX="MyHare"
-WITHOUT_VCF="${DATA_PREFIX}_without_1k_3k_5k_5kS8.vcf.gz"
+MODERN_VCF="${DATA_PREFIX}_modern.vcf.gz"
 ALL_VCF="${DATA_PREFIX}_with_all_samples.vcf.gz"
 ANALYSIS_DIR="./population_analysis"
 PLINK="$HOME/plink"
@@ -54,7 +54,7 @@ run_analysis() {
 }
 
 mkdir -p "$ANALYSIS_DIR"
-run_analysis "without_1k_3k_5k_5kS8" "$WITHOUT_VCF"
+run_analysis "modern" "$MODERN_VCF"
 run_analysis "with_all_samples" "$ALL_VCF"
 
 echo "PCA and ADMIXTURE analyses complete."

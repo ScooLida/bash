@@ -5,9 +5,10 @@ The population-genetic line produces filtered VCF files, PCA, and ADMIXTURE
 results. The BUSCO line extracts BUSCO gene sequences, filters and aligns them,
 and builds gene and species trees.
 
-The samples `1k`, `3k`, `5k`, and `5kS8` are treated as a separate comparison
-group. Both lines produce results first without these samples and then with all
-samples.
+The samples `1k`, `3k`, `4k`, and `5kS8` are ancient samples. Modern-only and
+all-sample datasets are processed separately. Locus selection for the tree
+analysis is performed using modern samples only; ancient sequences are then
+added to the same modern-selected loci.
 
 ## Line 1: VCF and Population Analyses
 
@@ -17,7 +18,7 @@ Run the scripts in this order:
 
 Calls variants from Paleomix BAM files, restricts variant calling to regions
 listed in `chr.txt`, merges per-sample VCF files, and creates two filtered VCF
-datasets: one without `1k`, `3k`, `5k`, `5kS8`, and one with all samples.
+datasets: one containing modern samples only, and one with all samples.
 
 Filters: `QUAL >= 20` and `MIN(FMT/DP) >= 3`.
 
@@ -44,32 +45,35 @@ Run the scripts in this order:
 ### `scr_21_bam_to_busco.sh`
 
 Extracts BUSCO gene loci from BAM files and prepares two merged FASTA datasets:
-one without `1k`, `3k`, `5k`, `5kS8`, and one with all samples.
+one containing modern samples only, and one containing modern plus ancient
+samples. Existing per-sample FASTA files are skipped when they are non-empty
+and contain more than `MIN_SEQ_LENGTH` nucleotides.
 
 Filters and settings: `MIN_COVERAGE=2`, discard sequences shorter than
 `MIN_SEQ_LENGTH=10`, and use BUSCO coordinates from `BED_FILE`.
 
 ### `scr_22_mafft.sh`
 
-Aligns both merged FASTA datasets with MAFFT using nine parallel threads.
+Aligns modern FASTA files first with MAFFT using nine parallel jobs, then adds
+ancient sequences to the modern alignments with `mafft --addfragments`. This
+preserves the modern alignment as the backbone.
 
 ### `scr_23_filter_by_gaps.sh`
 
-Filters aligned BUSCO genes independently for both datasets and writes lists of
-genes that pass the filters.
+Filters aligned BUSCO genes using the modern alignments only and writes the
+modern-selected locus list. The same list is copied for the all-sample dataset;
+absence of an ancient sequence does not remove the locus.
 
-Filters: maximum sequence length `5000`, minimum ATGC count per sample `30`,
-and maximum gap percentage `30%`. The dataset without the four excluded
-samples has no required-sample check. In the all-sample dataset, `1k`, `3k`,
-`5k`, and `5kS8` are all required. If any required sample is absent from a
-gene FASTA file, that gene is excluded from the gene list and is not analysed
-further.
+Filters: maximum sequence length `5000`, minimum ATGC count per modern sample
+`30`, and maximum non-ATGC proportion `30%`.
 
 ### `scr_24_iqtree_astral.sh`
 
-Builds IQ-TREE gene trees with the `GTR+G` model for both filtered datasets,
-then runs ASTRAL separately to produce one species tree without the excluded
-samples and one species tree with all samples.
+Builds the modern-only IQ-TREE gene trees first with the `GTR+G` model and runs
+ASTRAL to produce the modern backbone species tree. It then builds a second set
+of gene trees and an all-sample species tree using the same modern-selected
+loci after ancient sequences have been added. The second tree is a combined
+inference and may change the topology; it is not formal fixed-tree placement.
 
 ## Other Files
 
