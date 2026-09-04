@@ -284,7 +284,7 @@ for bam in "${BAMS[@]}"; do
             sequence=$(printf '%s' "$sequence" | run_tool rev | run_tool tr 'ACGTacgt' 'TGCAtgca')
         fi
         printf '>%s\n%s\n' "$sample" "$sequence" >> "$OUT/gene_fastas/${gene}.fa"
-    done < <(run_tool awk 'BEGIN {FS="\t"} !/^#/ && NF >= 5 {print $1, $2, $3, $4, $5}' "$PCG_BED")
+    done < <(run_tool awk 'BEGIN {FS=OFS="\t"} !/^#/ && NF >= 5 {print $1, $2, $3, $4, $5}' "$PCG_BED")
 done
 
 printf '[alignment] Aligning each PCG with MAFFT\n'
