@@ -26,8 +26,9 @@ MIN_BQ=20
 MIN_DP=2
 MIN_QUAL=30
 
-# ASTRAL jar used in the existing hare-work scripts.
-ASTRAL_JAR="$HOME/Astral/astral.5.16.3.jar"
+# ASTRAL jar used in the existing hare-work scripts. It can be overridden at
+# runtime: ASTRAL_JAR=/actual/path/astral.jar bash scr_31_mito_pcg_astral.sh
+ASTRAL_JAR="${ASTRAL_JAR:-$HOME/Astral/astral.5.16.3.jar}"
 
 die() {
     printf 'ERROR: %s\n' "$*" >&2
