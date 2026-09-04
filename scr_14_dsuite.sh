@@ -5,7 +5,8 @@ set -euo pipefail
 
 DSUITE="$HOME/Dsuite/Build/Dsuite"
 VCF="${1:-MyHare_with_all_samples.vcf.gz}"
-SET_DIR="./for_data"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SET_DIR="$SCRIPT_DIR/for_data"
 OUT_DIR="./dsuite_results"
 
 if [ ! -x "$DSUITE" ]; then
