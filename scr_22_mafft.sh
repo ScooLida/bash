@@ -24,8 +24,9 @@ align_gene() {
     local all_output="$all_output_dir/${gene}.fasta"
 
     if [ ! -s "$modern_source" ]; then
-        echo "Error: modern FASTA not found or empty: $modern_source" >&2
-        return 1
+        # A locus without modern sequence cannot define the modern backbone.
+        echo "Skipping locus without modern sequence: $gene" >&2
+        return 0
     fi
     if [ ! -s "$all_source" ]; then
         echo "Error: all-sample FASTA not found or empty: $all_source" >&2
