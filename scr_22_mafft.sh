@@ -14,6 +14,12 @@ DATASET_MODERN="modern"
 DATASET_WITH_ALL="with_all_samples"
 SCRIPT_PATH="$(readlink -f "$0")"
 
+if ! command -v mafft >/dev/null 2>&1; then
+    echo "Error: MAFFT is not installed or not available in PATH." >&2
+    echo "Install it in the active conda environment, then rerun this script." >&2
+    exit 1
+fi
+
 align_gene() {
     local gene=$1
     local modern_source="$WORK_DIR/combined_unaligned_${DATASET_MODERN}/${gene}.fasta"
@@ -73,7 +79,8 @@ align_gene() {
     ' "$all_source" > "$ancient_file"
 
     if [ -s "$ancient_file" ]; then
-        if ! mafft --addfragments "$ancient_file" "$modern_output" > "$all_output" 2>> "$log_file"; then
+        if ! mafft --6merpair --keeplength --addfragments "$ancient_file" \
+            "$modern_output" > "$all_output" 2>> "$log_file"; then
             echo "Error: MAFFT failed while adding ancient sequences: $gene" >&2
             cat "$log_file" >&2
             rm -f "$modern_output" "$all_output" "$log_file"
