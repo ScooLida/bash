@@ -38,10 +38,13 @@ the modern model. Ancient-only results are saved to
 Creates PCA scatter plots and ADMIXTURE ancestry-proportion plots for both
 datasets using the outputs from `scr_12_pca_admixture.sh`.
 
-### ABBA-BABA and fbranch
+### `scr_14_dsuite.sh`
 
-These analyses are not included yet. They require defined groups `P1`, `P2`,
-`P3`, `P4`, an outgroup, and a selected implementation such as Dsuite.
+Runs `Dsuite Dtrios` on `MyHare_with_all_samples.vcf.gz` using both
+`for_data/sets_hare.txt` and `for_data/sets_krol.txt`. The set files define the
+population/species assignments and outgroup; samples marked `xxx` are ignored
+by Dsuite. Results are written to `dsuite_results/sets_hare_*` and
+`dsuite_results/sets_krol_*`.
 
 ## Line 2: BUSCO Gene Analysis and Trees
 
