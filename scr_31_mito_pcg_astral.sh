@@ -8,7 +8,7 @@ shopt -s nullglob globstar
 # ---------- Edit these paths ----------
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REF="/NatureUsers/ltursunova/hare_work/myto_hare.fasta"
-PCG_BED="$SCRIPT_DIR/scr_31_hare_l_europaeus_NC_004028.1_PCGs.bed"
+PCG_BED="$SCRIPT_DIR/for_data/scr_31_hare_l_europaeus_NC_004028.1_PCGs.bed"
 BAM_ROOT="/NatureUsers/ltursunova/hare_work/MyHare_myto/my_genome"
 SAMPLE_LIST="/NatureUsers/ltursunova/hare_work/list_myto.txt"
 
