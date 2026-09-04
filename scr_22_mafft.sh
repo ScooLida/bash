@@ -22,6 +22,7 @@ align_gene() {
     local all_output_dir="$WORK_DIR/final_alignments_${DATASET_WITH_ALL}"
     local modern_output="$modern_output_dir/${gene}.fasta"
     local all_output="$all_output_dir/${gene}.fasta"
+    local log_file="$WORK_DIR/.mafft_${gene}.log"
 
     if [ ! -s "$modern_source" ]; then
         # A locus without modern sequence cannot define the modern backbone.
@@ -49,7 +50,12 @@ align_gene() {
     fi
 
     mkdir -p "$modern_output_dir" "$all_output_dir"
-    mafft --auto "$modern_source" > "$modern_output" 2>/dev/null
+    if ! mafft --auto "$modern_source" > "$modern_output" 2> "$log_file"; then
+        echo "Error: MAFFT failed for modern alignment: $gene" >&2
+        cat "$log_file" >&2
+        rm -f "$modern_output" "$log_file"
+        return 1
+    fi
 
     ancient_file=$(mktemp "$WORK_DIR/.ancient_fragments.XXXXXX.fasta")
     trap 'rm -f "$ancient_file"' EXIT
@@ -67,7 +73,12 @@ align_gene() {
     ' "$all_source" > "$ancient_file"
 
     if [ -s "$ancient_file" ]; then
-        mafft --addfragments "$ancient_file" "$modern_output" > "$all_output" 2>/dev/null
+        if ! mafft --addfragments "$ancient_file" "$modern_output" > "$all_output" 2>> "$log_file"; then
+            echo "Error: MAFFT failed while adding ancient sequences: $gene" >&2
+            cat "$log_file" >&2
+            rm -f "$modern_output" "$all_output" "$log_file"
+            return 1
+        fi
     else
         cp "$modern_output" "$all_output"
     fi
@@ -75,6 +86,7 @@ align_gene() {
     alignment_length=$(awk '!/^>/{print length($0); exit}' "$modern_output")
     if [ -z "$alignment_length" ] || [ "$alignment_length" -le 0 ]; then
         echo "Error: could not determine alignment length: $modern_output" >&2
+        rm -f "$modern_output" "$all_output" "$log_file"
         return 1
     fi
 
@@ -84,6 +96,7 @@ align_gene() {
             printf '%*s\n' "$alignment_length" '' | tr ' ' 'N' >> "$all_output"
         fi
     done
+    rm -f "$log_file"
 }
 
 if [ "${1:-}" = "__align_gene" ]; then
