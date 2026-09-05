@@ -47,7 +47,7 @@ align_gene() {
     local modern_output="$modern_output_dir/${gene}.fasta"
     local all_output="$all_output_dir/${gene}.fasta"
     local log_file="$WORK_DIR/.mafft_${gene}.log"
-    local rejected_marker="$REJECTED_DIR/${gene}.long"
+    local rejected_marker="$REJECTED_DIR/${gene}.long.${MAX_ALIGNMENT_LENGTH}"
     local alignment_length=""
     local raw_max_length
     local modern_ready=false
