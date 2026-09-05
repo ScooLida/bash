@@ -6,7 +6,8 @@
 set -euo pipefail
 
 # Configuration
-THREADS=9
+# Usage: bash scr_22_mafft.sh [parallel_jobs]
+THREADS="${1:-9}"
 WORK_DIR="./subset_parallel/pipeline_bulletproof_final"
 GENE_LIST="$WORK_DIR/extracted_genes_list.txt"
 ANCIENT_SAMPLES="1k,3k,4k,5kS8"
@@ -170,6 +171,11 @@ align_gene() {
 if [ "${1:-}" = "__align_gene" ]; then
     align_gene "${2:-}"
     exit $?
+fi
+
+if ! [[ "$THREADS" =~ ^[1-9][0-9]*$ ]]; then
+    echo "Error: parallel_jobs must be a positive integer: $THREADS" >&2
+    exit 1
 fi
 
 if [ ! -f "$GENE_LIST" ]; then
