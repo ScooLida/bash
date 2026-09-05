@@ -68,8 +68,8 @@ preserves the modern alignment as the backbone. If an ancient sample has no
 sequence for a selected locus, the all-sample alignment contains an `N` sequence
 of the same length as the modern alignment. Loci without any modern sequence
 are skipped because they cannot define the modern backbone. Modern input
-sequences longer than 5000 nt are rejected before MAFFT. An alignment that
-exceeds 5000 nt after MAFFT is handled by the later `scr_23` filter. Completed
+sequences longer than 10000 nt are rejected before MAFFT. An alignment that
+exceeds 10000 nt after MAFFT is handled by the later `scr_23` filter. Completed
 modern alignments are reused when the script is restarted. The number of
 parallel jobs can be supplied at launch, for example `bash scr_22_mafft.sh 2`;
 the default is `9`.

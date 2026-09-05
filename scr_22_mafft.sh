@@ -14,7 +14,7 @@ ANCIENT_SAMPLES="1k,3k,4k,5kS8"
 DATASET_MODERN="modern"
 DATASET_WITH_ALL="with_all_samples"
 SCRIPT_PATH="$(readlink -f "$0")"
-MAX_ALIGNMENT_LENGTH=5000
+MAX_ALIGNMENT_LENGTH=10000
 REJECTED_DIR="$WORK_DIR/rejected_modern_long"
 
 if ! command -v mafft >/dev/null 2>&1; then

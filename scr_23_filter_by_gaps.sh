@@ -7,7 +7,7 @@ set -euo pipefail
 # Configuration
 WORK_DIR="./subset_parallel/pipeline_bulletproof_final"
 THRESHOLD_FOR_LIST=30
-MAX_SEQ_LENGTH=5000
+MAX_SEQ_LENGTH=10000
 MIN_ATGC_PERCENT=30
 MIN_NUCLEOTIDES_PER_SAMPLE=30
 DATASET_MODERN="modern"
