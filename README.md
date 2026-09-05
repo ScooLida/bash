@@ -67,7 +67,10 @@ ancient sequences to the modern alignments with `mafft --addfragments`. This
 preserves the modern alignment as the backbone. If an ancient sample has no
 sequence for a selected locus, the all-sample alignment contains an `N` sequence
 of the same length as the modern alignment. Loci without any modern sequence
-are skipped because they cannot define the modern backbone.
+are skipped because they cannot define the modern backbone. Modern input
+sequences longer than 5000 nt are rejected before MAFFT. An alignment that
+exceeds 5000 nt after MAFFT is handled by the later `scr_23` filter. Completed
+modern alignments are reused when the script is restarted.
 
 ### `scr_23_filter_by_gaps.sh`
 
